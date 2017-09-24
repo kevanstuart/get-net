@@ -1,0 +1,10 @@
+{
+	"settings": {
+        "statics": "public",
+        "engine" : "ect",
+        "views"  : "views",
+        "port"   : 3000
+    },
+    "db": {},
+    "base_url": "http://localhost:3000"
+}

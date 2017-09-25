@@ -58,8 +58,7 @@ var compress = compression({
  * Initialize AWS SDK && Dynamodb Client
  */
 aws_sdk.config.loadFromPath(config_dir + 'aws-config.json');
-console.log(aws_sdk);
-//var ddb = new aws_sdk.DynamoDB.DocumentClient();
+var ddb = new aws_sdk.DynamoDB();
 
 
 /**
@@ -76,13 +75,19 @@ application.use(compress);
 
 
 /**
+ * Require the database functions file
+ */
+var db = require('./data.js')(ddb);
+console.log(db);
+
+
+/**
  * Set Default Route
  */
 application.get('/', default_route);
 function default_route(req, res)
 {
-    console.log(ddb);
-    //res.render('index');
+    res.render('index');
 }
 
 

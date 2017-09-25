@@ -1,10 +1,11 @@
 {
-  "name": "which_isp",
-  "version": "0.0.1",
+  "name"       : "which_isp",
+  "version"    : "0.0.1",
   "description": "A Kevan Stuart Website",
-  "main": "index.js",
+  "main"       : "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test" : "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Kevan Stuart (kevan.jedi@gmail.com)",
   "dependencies": {

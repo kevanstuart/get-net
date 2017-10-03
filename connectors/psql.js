@@ -91,8 +91,6 @@ module.exports =
          */
         let plans = await this.getAllPlans();
 
-        
-
         //return promise;
 
     }

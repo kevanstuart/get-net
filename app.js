@@ -9,14 +9,14 @@
 /**
  * Get Node Environment Variable
  */
-var environment = process.env.NODE_ENV || "development";
+const environment = process.env.NODE_ENV || "development";
 
 
 /**
  * Set Base Directory && Related
  */
-let dir        = __dirname + '/';
-let config_dir = dir + 'config/' + environment + '/';
+const dir       = __dirname + '/';
+const configDir = dir + 'config/' + environment + '/';
 
 
 /**
@@ -28,12 +28,13 @@ let config_dir = dir + 'config/' + environment + '/';
  * 5. UUID
  * 6. ECT
  */
-var config      = require(config_dir + 'config.json');
-var compression = require('compression');
-var express     = require('express');
-var aws_sdk     = require('aws-sdk');
-var uuidv4      = require('uuid/v4');
-var ect         = require('ect');
+const config      = require(configDir + 'config.json');
+const compression = require('compression');
+const parser      = require('body-parser');
+const express     = require('express');
+const request     = require('request');
+const uuidv4      = require('uuid/v4');
+const ect         = require('ect');
 
 
 /**
@@ -55,47 +56,51 @@ var compress = compression({
 
 
 /**
- * Initialize AWS SDK && Dynamodb Client
- */
-aws_sdk.config.loadFromPath(config_dir + 'aws-config.json');
-var ddb = new aws_sdk.DynamoDB();
-
-
-/**
- * Initialize Express App & Configure
+ * Initialize Express App
  */
 var application = express();
+
+/**
+ * Configuration for Application
+ */
 application.engine('ect', renderer.render);
 
 application.set('port', process.env.PORT || config.settings.port);
 application.set('view engine', 'ect');
 
 application.use(express.static(config.settings.statics, { maxage:'1w' }));
+application.use(parser.urlencoded({ extended: true }));
+application.use(parser.json());
 application.use(compress);
-
-
-/**
- * Require the database functions file
- */
-var db = require('./data.js')(ddb);
-console.log(db);
 
 
 /**
  * Set Default Route
  */
-application.get('/', default_route);
-function default_route(req, res)
+application.get('/', defaultRoute);
+function defaultRoute(req, res)
 {
-    res.render('index');
+	let data = "http://localhost:3000/data";
+	request(data, function(err, response, data) 
+	{
+		let plans = JSON.parse(data);
+		
+		//res.render('index', { name: 'Kevan' });	
+	});
 }
+
+
+/**
+ * Set routes for AJAX data calls
+ */
+require('./routes/data_routes')(application, config);
 
 
 /**
  * Start App && Listen to Port
  */
-application.listen(application.get('port'), listen_result);
-function listen_result()
+application.listen(application.get('port'), listenResult);
+function listenResult()
 {
     console.log('App listening on port ' + application.get('port'));
 }

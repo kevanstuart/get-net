@@ -15,13 +15,13 @@ const db = require('../connectors/psql');
 /**
  * Filters to check POST data against
  */
-var filtersToCheck = ['price', 'download', 'provider', 'connection_type'];
+var filtersToCheck = ['max_price', 'min_download', 'provider', 'connection_type'];
 
 
 /**
  * Sort Criteria to check POSt data against
  */
-var sortByToCheck  = ['download', 'upload', 'price', 'price & upload'];
+var sortByToCheck  = ['download', 'upload', 'price'];
 
 
 /**
@@ -34,11 +34,11 @@ module.exports = function(application, config)
 	/**
 	 * Set config into request
 	 */
-	/*application.use(function(req, res, next) 
+	application.use(function(req, res, next) 
 	{
 		req.config = config;
 		next();
-	});*/
+	});
 
 	/**
 	 * Set data endpoint to send JSON back to the frontend
@@ -82,7 +82,7 @@ module.exports = function(application, config)
     		/**
     		 * Sort filtered rows
     		 */
-    		let sorted   = sortResults(filtered, postData);
+    		let sorted = sortResults(filtered, postData);
 
     		/**
     		 * Send filtered results to Frontend
@@ -147,15 +147,30 @@ function getRequestedFilters(filters)
 	{
 
 		/**
+		 * Check item is a valid filter
+		 */
+		if (!filtersToCheck.includes(item))
+		{
+			return;
+		}
+
+		/**
 		 * Create object and split item into array
 		 */
 		let tmpObj = new Object();
-		let tmpArr = item.split('_');
+		if (item.includes('max') || item.includes('min'))
+		{
+			let tmpArr = item.split('_');	
+			tmpObj[ tmpArr[1] ] = tmpArr[0];
+		}
+		else
+		{
+			tmpObj[ item ] = "equals";
+		}
 
 		/**
 		 * Populate Object
 		 */
-		tmpObj[ tmpArr[1] ] = tmpArr[0];
 		filters[index] = tmpObj;
 
 	});

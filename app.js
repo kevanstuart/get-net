@@ -75,18 +75,80 @@ application.use(compress);
 
 
 /**
- * Set Default Route
+ * Set index route on GET
  */
-application.get('/', defaultRoute);
-function defaultRoute(req, res)
+application.get('/', indexGetRoute);
+function indexGetRoute(req, res)
 {
-	let data = "http://localhost:3000/data";
-	request(data, function(err, response, data) 
+
+	/**
+	 * Set data api URL
+	 */
+	let dataUrl = config.base_url + '/data';
+
+	/**
+	 * Send request to the URL && handle response
+	 */
+	request(dataUrl, function(err, response, data) 
 	{
-		let plans = JSON.parse(data);
-		
-		//res.render('index', { name: 'Kevan' });	
+
+		/**
+		 * JSON parse data response
+		 */
+		let plans = {
+			plans: JSON.parse(data)
+		};
+
+		/**
+		 * Render the index page
+		 */
+		res.render('index', plans);	
+
 	});
+
+}
+
+
+/**
+ * Set index route on POST
+ */
+application.post('/', indexPostRoute);
+function indexPostRoute(req, res)
+{
+
+	/**
+	 * Set data api URL
+	 */
+	let dataUrl = config.base_url + '/data';
+
+	/**
+	 * Get POST data
+	 */
+	let postOptions = {
+		url:  dataUrl,
+		form: req.body
+	};
+
+	/**
+	 * Send request to the URL && handle response
+	 */
+	request.post(postOptions, function(err, response, data) 
+	{
+
+		/**
+		 * JSON parse data response
+		 */
+		let plans = {
+			plans: JSON.parse(data)
+		};
+
+		/**
+		 * Render the index page
+		 */
+		res.render('index', plans);	
+
+	});
+
 }
 
 

@@ -1,5 +1,54 @@
 <% extend 'layouts/default.ect' %>
 
-<h1>Hello - what?</h1>
+<h1>Get Net / Get Web / WhichISP (?)</h1>
 
-<%= name %>
+<form method="POST">
+	<label for="sort">Sort By</label>
+	<select name="sort">
+		<option value="download_desc">Download Speed</option>
+		<option value="upload_desc">Upload Speed</option>
+		<option value="price_asc">Price (Cheapest First)</option>
+		<option value="price_desc">Price (Cheapest Last)</option>
+	</select><br/><br/>
+
+	<!-- price | download speed | provider | connection type -->
+	<label for="max_price">Max Price</label>
+	<select name="max_price">
+		<option value="all" selected>All</option>
+		<option value="50">$50</option>
+		<option value="100">$100</option>
+		<option value="150">$150</option>
+		<option value="200">$200</option>
+	</select>
+
+	<label for="min_download">Min Download Speed</label>
+	<select name="min_download">
+		<option value="all" selected>All</option>
+		<option value="1mbps">1 mbps</option>
+		<option value="3mbps">3 mbps</option>
+		<option value="5mbps">5 mbps</option>
+		<option value="10mbps">10 mbps</option>
+	</select>
+
+	<label for="provider">Provider</label>
+	<select name="provider">
+		<option value="all" selected>All</option>
+		<option value="ezecom">Ezecom</option>
+	</select>
+
+	<label for="connection_type">Connection Type</label>
+	<select name="connection_type">
+		<option value="all" selected>All</option>
+		<option value="ADSL">ADSL</option>
+	</select>
+
+	<button type="submit">Submit</button>
+
+</form>
+<br/><br/>
+<% if @plans?.length > 0 : %>
+	<% for plan in @plans : %>
+		<%= plan.provider %> | <%= plan.plan %> | <%= plan.download %> | <%= plan.upload %> |
+		<%= plan.connection_type %> | $<%= plan.price %><br/>
+	<% end %>
+<% end %>

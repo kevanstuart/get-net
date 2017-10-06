@@ -75,19 +75,35 @@ module.exports = function(application, config)
     		let rows = data.rows;
 
     		/**
+    		 * Get filters & sort information from POST data
+    		 */
+    		let filters = getFilters(postData);
+    		let sortBy  = postData.sort;
+
+
+    		/**
     		 * Filter rows
     		 */
-    		let filtered = filterResults(rows, postData);
+    		let filtered = filterResults(rows, postData, filters);
 
     		/**
     		 * Sort filtered rows
     		 */
-    		let sorted = sortResults(filtered, postData);
+    		let sorted = sortResults(filtered, postData, sortBy);
+
+    		/**
+    		 * Create return json
+    		 */
+    		let toReturn = {
+    			plans: sorted,
+    			filters: filters,
+    			sort: sortBy
+    		};
 
     		/**
     		 * Send filtered results to Frontend
     		 */
-    		res.json(sorted);
+    		res.json(toReturn);
 
     	});
     	
@@ -98,16 +114,11 @@ module.exports = function(application, config)
 /**
  * Filter the results from the database with the provided POST data
  */
-function filterResults(rows, postData)
+function filterResults(rows, postData, filters)
 {
 
 	/**
-	 * Set the filters to loop through
-	 */
-	let filters = getRequestedFilters(Object.keys(postData));
-
-	/**
-	 * Filter rows && return new Array
+	 * Filter data into a new Array
 	 */
 	return rows.filter(function(row) 
 	{
@@ -117,7 +128,7 @@ function filterResults(rows, postData)
 		 */
 		let pass = new Array();
 		filters.forEach(function (item) {
-			pass.push(getFilterComparisons(item, row, postData));
+			pass.push(processFilter(item, row, postData));
 		});
 
 		/**
@@ -135,86 +146,18 @@ function filterResults(rows, postData)
 
 
 /**
- * Explode filters into column && operator in an Object
- */
-function getRequestedFilters(filters)
-{
-
-	/**
-	 * Loop through filters
-	 */
-	filters.forEach(function(item, index) 
-	{
-
-		/**
-		 * Check item is a valid filter
-		 */
-		if (!filtersToCheck.includes(item))
-		{
-			return;
-		}
-
-		/**
-		 * Create object and split item into array
-		 */
-		let tmpObj = new Object();
-		if (item.includes('max') || item.includes('min'))
-		{
-			let tmpArr = item.split('_');	
-			tmpObj[ tmpArr[1] ] = tmpArr[0];
-		}
-		else
-		{
-			tmpObj[ item ] = "equals";
-		}
-
-		/**
-		 * Populate Object
-		 */
-		filters[index] = tmpObj;
-
-	});
-
-	/**
-	 * Return exploded filters
-	 */
-	return filters;
-
-}
-
-
-/**
- * Return boolean on comparing values to filters
- */
-function getFilterComparisons(filter, element, postData)
-{
-
-	/**
-	 * Get column and operator
-	 */
-	let column   = Object.keys(filter)[0];
-	let operator = filter[column];
-
-	/**
-	 * Perform comparison operation and return
-	 */
-	if (operator === 'min')
-	{
-		return element[column] >= postData[ operator + '_' + column ];
-	}
-	else if (operator === 'max')
-	{
-		return element[column] <= postData[ operator + '_' + column ];
-	}
-
-}
-
-
-/**
  * Sort the filtered rows with the provided POST data
  */
 function sortResults(rows, postData)
 {
+
+	/**
+	 * Return true if sorting value is "default"
+	 */
+	if (postData.sort === "default")
+	{
+		return rows;
+	}
 
 	/**
 	 * Explode the Sorting POST data into sort && direction
@@ -226,27 +169,125 @@ function sortResults(rows, postData)
 	/**
 	 * Sort the rows
 	 */
-	rows.sort(function(a, b) 
+	return rows.sort(function(a, b) 
 	{
 
 		/**
-		 * Change sort calculation for directionality
+		 * Set sane default return
 		 */
-		if (sortDir == "desc")
+		let result = 0;
+
+		/**
+		 * Process the sort based on key type and direction
+		 */
+		if (typeof a[sortKey] == 'string' && typeof b[sortKey] == 'string')
 		{
-			return b[sortKey] - a[sortKey];
+			result = a[sortKey].localeCompare(b[sortKey])
 		}
-		else if (sortDir == "asc")
+		else
 		{
-			return a[sortKey] - b[sortKey];
+			result = (sortDir === "asc") ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey];
 		}
+
+		/**
+		 * Return sort order
+		 */
+		return result;
 		
 	});
 
+}
+
+
+/**
+ * Explode filters into column && operator in an Object
+ */
+function getFilters(postData)
+{
+
 	/**
-	 * Return sorted rows
+	 * New filters array
 	 */
-	return rows;
+	let filters = new Array();
+
+	/**
+	 * Loop through POST data to get filters
+	 */
+	for (var item in postData)
+	{
+		
+		/**
+		 * If filter isn't in the list, move on
+		 */
+		if (!filtersToCheck.includes(item))
+		{
+			continue;
+		}
+
+		/**
+		 * If filter is set to "All", move on
+		 */
+		if (postData[item] == "all")
+		{
+			continue;
+		}
+
+		/**
+		 * Split filter into filter name and filter operator
+		 * and push to array
+		 */
+		let tmpObj = new Object();
+		if (item.includes('max') || item.includes('min'))
+		{
+			let tmpArr = item.split('_');
+			tmpObj[ tmpArr[1] ] = tmpArr[0];
+		}
+		else
+		{
+			tmpObj[ item ] = "equals";
+		}
+
+		filters.push(tmpObj);
+
+	}
+
+	/**
+	 * Return filters to use
+	 */
+	return filters;
+
+}
+
+
+/**
+ * Return boolean on comparing values to filters
+ */
+function processFilter(filter, element, postData)
+{
+
+	/**
+	 * Get column and operator
+	 */
+	let column   = Object.keys(filter)[0];
+	let operator = filter[column];
+
+	/**
+	 * Perform comparison operation and return
+	 */
+	let result = false;
+	switch (operator)
+	{
+		case 'min':
+			result = (element[column] >= postData[ operator + '_' + column ]);
+			break;
+		case 'max':
+			result = (element[column] <= postData[ operator + '_' + column ]);
+			break;
+		default:
+			result = (element[column] == postData[ column ]);
+			break;
+	}
+	return result;
 
 }
 

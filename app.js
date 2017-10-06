@@ -136,16 +136,9 @@ function indexPostRoute(req, res)
 	{
 
 		/**
-		 * JSON parse data response
-		 */
-		let plans = {
-			plans: JSON.parse(data)
-		};
-
-		/**
 		 * Render the index page
 		 */
-		res.render('index', plans);	
+		res.render('index', JSON.parse(data));	
 
 	});
 

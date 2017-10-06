@@ -1,10 +1,11 @@
 <% extend 'layouts/default.ect' %>
 
-<h1>Get Net / Get Web / WhichISP (?)</h1>
+<h1>ISP Comparison</h1>
 
 <form method="POST">
 	<label for="sort">Sort By</label>
 	<select name="sort">
+		<option value="default">Default</option>
 		<option value="download_desc">Download Speed</option>
 		<option value="upload_desc">Upload Speed</option>
 		<option value="price_asc">Price (Cheapest First)</option>

@@ -1,11 +1,17 @@
 {
 	"settings": {
-        "statics": "public",
-        "engine" : "ect",
-        "views"  : "views",
-        "port"   : 3000
+        "statics"  : "public",
+        "engine"   : "ect",
+        "views"    : "views",
+        "port"     : 3000
     },
-    "cache": {},
-    "db": {},
-    "base_url": "http://localhost:3000"
+    "db": {
+        "url"      : "postgres://localhost:5432/whichisp",
+    	"password" : "",
+    	"database" : "whichisp",
+    	"user"     : "kevanstuart",
+    	"host"     : "localhost"
+    },
+    "baseUrl"     : "http://localhost:3000",
+    "apiPath"     : "/data"
 }

@@ -15,20 +15,7 @@ const Pool  = require('pg').Pool;
 /**
  * Configure PSQL
  */
-const connection = "postgres://localhost:5432/whichisp";
-const pool       = new Pool({
-    connectionString: connection
-});
-
-
-/**
- * The pool with emit an error on behalf of any idle clients it contains 
- * if a backend error or network partition happens
- */
-pool.on('error', (err, client) => {
-  console.error('Unexpected error on idle client', err)
-  process.exit(-1)
-})
+var pool;
 
 
 /**
@@ -36,6 +23,15 @@ pool.on('error', (err, client) => {
  */
 module.exports = 
 {
+
+    /**
+     * Connect to the database by 
+     * initializing a connection Pool 
+     */
+    connectToDb: function(db_config)
+    {
+        pool = new Pool(db_config);
+    },
 
     /**
      * Get All Items from the database
@@ -47,7 +43,6 @@ module.exports =
          * Create client connection
          */
         const client = await pool.connect();
-
         try 
         {
 
@@ -77,22 +72,6 @@ module.exports =
             client.release();
 
         }
-    },
-
-
-    /**
-     * Function to handle the query without processing the result
-     */
-    getFilteredPlans: async function()
-    {
-
-        /**
-         * Retrieve all items
-         */
-        let plans = await this.getAllPlans();
-
-        //return promise;
-
     }
 
 };

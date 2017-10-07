@@ -23,18 +23,23 @@ const configDir = dir + 'config/' + environment + '/';
  * Module / File requires
  * 1. Configuration File
  * 2. Compression
+ * 3. Body-Parser
  * 3. Express
- * 4. AWS SDK
- * 5. UUID
- * 6. ECT
+ * 4. UUID
+ * 5. ECT
  */
 const config      = require(configDir + 'config.json');
 const compression = require('compression');
 const parser      = require('body-parser');
 const express     = require('express');
-const request     = require('request');
 const uuidv4      = require('uuid/v4');
 const ect         = require('ect');
+
+
+/**
+ * Require database connector
+ */
+const db_psql = require(dir + 'connectors/psql');
 
 
 /**
@@ -75,80 +80,12 @@ application.use(compress);
 
 
 /**
- * Set index route on GET
+ * Require route files
+ * 1. frontend
+ * 2. api
  */
-application.get('/', indexGetRoute);
-function indexGetRoute(req, res)
-{
-
-	/**
-	 * Set data api URL
-	 */
-	let dataUrl = config.base_url + '/data';
-
-	/**
-	 * Send request to the URL && handle response
-	 */
-	request(dataUrl, function(err, response, data) 
-	{
-
-		/**
-		 * JSON parse data response
-		 */
-		let plans = {
-			plans: JSON.parse(data)
-		};
-
-		/**
-		 * Render the index page
-		 */
-		res.render('index', plans);	
-
-	});
-
-}
-
-
-/**
- * Set index route on POST
- */
-application.post('/', indexPostRoute);
-function indexPostRoute(req, res)
-{
-
-	/**
-	 * Set data api URL
-	 */
-	let dataUrl = config.base_url + '/data';
-
-	/**
-	 * Get POST data
-	 */
-	let postOptions = {
-		url:  dataUrl,
-		form: req.body
-	};
-
-	/**
-	 * Send request to the URL && handle response
-	 */
-	request.post(postOptions, function(err, response, data) 
-	{
-
-		/**
-		 * Render the index page
-		 */
-		res.render('index', JSON.parse(data));	
-
-	});
-
-}
-
-
-/**
- * Set routes for AJAX data calls
- */
-require('./routes/data_routes')(application, config);
+require('./routes/frontend')(application, config);
+require('./routes/api')(application, config, db_psql);
 
 
 /**

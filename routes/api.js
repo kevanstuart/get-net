@@ -1,15 +1,9 @@
 /**
- * File: data_routes.js
- * Author: Kevan Stuart (kevan@tapendium.com)
+ * File: api.js
+ * Author: Kevan Stuart (kevan.jedi@gmail.com)
  * 
  * Handles routing for the data api urls
  */
-
-
-/**
- * Require database connector
- */
-const db = require('../connectors/psql');
 
 
 /**
@@ -27,7 +21,7 @@ var sortByToCheck  = ['download', 'upload', 'price'];
 /**
  * Data API Routes function
  */
-module.exports = function(application, config)
+module.exports = function(application, config, db)
 {
 	'use strict';
 
@@ -36,7 +30,12 @@ module.exports = function(application, config)
 	 */
 	application.use(function(req, res, next) 
 	{
-		req.config = config;
+		db.connectToDb({
+			database: config.db.database,
+			password: config.db.password,
+			host: config.db.host,
+			user: config.db.user
+		});
 		next();
 	});
 
@@ -45,10 +44,15 @@ module.exports = function(application, config)
 	 */
 	application.get('/data', function(req, res)
 	{
+
+		/**
+		 * Get all results && push to json
+		 */
 		let result = db.getAllPlans();
-		result.then(function (then) {
-			res.json(then.rows);
+		result.then(function (data) {
+			res.json(data.rows);
 		});
+
     });
 
 	/**

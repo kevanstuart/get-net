@@ -44,9 +44,7 @@ module.exports = function(application, config, db)
 	 */
 	application.get('/data', function(req, res)
 	{
-
-		console.log(db);
-
+		
 		/**
 		 * Get all results && push to json
 		 */

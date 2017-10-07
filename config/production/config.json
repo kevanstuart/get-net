@@ -12,6 +12,6 @@
         "user"     : "anxzvxoqpzuerp",
         "host"     : "ec2-54-235-102-25.compute-1.amazonaws.com"
     },
-    "baseUrl"     : "https://whichisp.heroku.com",
+    "baseUrl"     : "https://whichisp.herokuapp.com",
     "apiPath"     : "/data"
 }

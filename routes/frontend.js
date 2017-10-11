@@ -41,8 +41,6 @@ module.exports = function(application, config)
 		request(config.apiUrl, function(err, response, data) 
 		{
 
-			console.log(config.apiUrl);
-			
 			/**
 			 * JSON parse data response
 			 */

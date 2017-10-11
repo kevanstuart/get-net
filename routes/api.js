@@ -100,8 +100,7 @@ module.exports = function(application, config, db)
     		 */
     		let toReturn = {
     			plans: sorted,
-    			filters: filters,
-    			sort: sortBy
+    			data: postData
     		};
 
     		/**
@@ -186,7 +185,7 @@ function sortResults(rows, postData)
 		 */
 		if (typeof a[sortKey] == 'string' && typeof b[sortKey] == 'string')
 		{
-			result = a[sortKey].localeCompare(b[sortKey])
+			result = (sortDir === "asc") ? b[sortKey].localeCompare(a[sortKey]) : a[sortKey].localeCompare(b[sortKey]);
 		}
 		else
 		{
@@ -231,7 +230,7 @@ function getFilters(postData)
 		/**
 		 * If filter is set to "All", move on
 		 */
-		if (postData[item] == "all")
+		if (postData[item] == "all" || postData[item] == 0)
 		{
 			continue;
 		}

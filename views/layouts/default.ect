@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,15 +8,37 @@
         <meta name="MobileOptimized" content="320">
 
         <title></title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Open+Sans+Condensed:300,700" />
-        <!-- <link rel="stylesheet" href="/css/tap-weather.min.css" /> -->
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/bootstrap-reboot.min.css" />
+        <link rel="stylesheet" href="/css/ion.rangeSlider.css" />
+        <link rel="stylesheet" href="/css/ion.rangeSlider.skin.css" />
     </head>
 
-    <% if @site?.style : %>
-    <body class="<%- @site.style %>">
-    <% else : %>
-    <body class="standard">
-    <% end %>
-        <% content %>
+    <body>
+        <header class="bg-primary container-fluid p-4">
+            <h1 class="display-4 text-black text-center text-lowercase">Which ISP Cambodia</h1>
+            <p class="text-light text-center text-uppercase">Cambodia's Internet Provider Comparison Tool</p>
+        </header>
+
+        <main>
+            <% content %>
+        </main>
+
+        <footer class="bg-dark container-fluid p-5">
+            <ul class="nav nav-pills justify-content-center mb-2">
+                <li class="nav-item">
+                    <a class="nav-link text-primary lead" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary lead" href="/contact">Contact</a>
+                </li>
+            </ul>
+            <p class="text-light text-center my-0">All Rights Reserved. Copyright &copy; 2017</p>
+        </footer>
     </body>
+
+    <script language="javascript" src="/js/jquery-1.12.3.min.js"></script>
+    <script language="javascript" src="/js/bootstrap.min.js"></script>
+    <script language="javascript" src="/js/ion.rangeSlider.min.js"></script>
+    <script language="javascript" src="/js/wi_custom.js"></script>
 </html>

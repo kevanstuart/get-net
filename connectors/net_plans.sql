@@ -30,4 +30,4 @@ INSERT INTO net_plans (plan_UUID,provider,plan,download,upload,connection_type,p
 ALTER TABLE net_plans 
 ADD COLUMN provider_logo varchar(50);
 
-UPDATE net_plans SET provider_image = "uploads/ezecom.jpg";
+UPDATE net_plans SET provider_logo = 'uploads/ezecom.png';

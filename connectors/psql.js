@@ -49,7 +49,7 @@ module.exports =
             /**
              * Execute query && return
              */
-            let result = await pool.query("SELECT * FROM net_plans ORDER BY price ASC");
+            let result = await pool.query("SELECT * FROM net_plans WHERE active = true ORDER BY price ASC");
             return result;
 
         }

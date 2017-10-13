@@ -42,15 +42,43 @@ module.exports = function(application, config, db)
 	/**
 	 * Set data endpoint to send JSON back to the frontend
 	 */
-	application.get('/data', function(req, res)
+	application.get('/data/:page', function(req, res)
 	{
-		
+
 		/**
 		 * Get all results && push to json
 		 */
 		let result = db.getAllPlans();
-		result.then(function (data) {
-			res.json(data.rows);
+		result.then(function (data) 
+		{
+
+			/**
+    		 * Init rows array
+    		 */
+    		let rows = data.rows;
+    		
+    		/**
+    		 * Configure page options
+    		 */
+    		/*let pageOptions = {
+    			page : req.params.page,
+    			limit: config.settings.page_limit
+    		};
+			let paginated = paginateResults(rows, pageOptions);*/
+
+			/**
+    		 * Create return json
+    		 */
+    		let toReturn = {
+    			/*pagination: paginated,*/
+    			plans: rows,
+    			config: config
+    		};
+
+			/**
+    		 * Send results to Frontend
+    		 */
+    		res.json(toReturn);
 		});
 
     });
@@ -58,7 +86,7 @@ module.exports = function(application, config, db)
 	/**
 	 * Set data endpoint to take POST data and return JSON to the frontend
 	 */
-    application.post('/data', function(req, res) 
+    application.post('/data/:page', function(req, res) 
     {
 
     	/**
@@ -96,11 +124,22 @@ module.exports = function(application, config, db)
     		let sorted = sortResults(filtered, postData, sortBy);
 
     		/**
+    		 * Configure page options
+    		 */
+    		/*let pageOptions = {
+    			page : req.params.page,
+    			limit: config.settings.page_limit
+    		};
+			let paginated = paginateResults(sorted, pageOptions);*/
+
+    		/**
     		 * Create return json
     		 */
     		let toReturn = {
-    			plans: sorted,
-    			data: postData
+    			/*pagination: paginated,*/
+    			plans : sorted,
+    			config: config,
+    			data  : postData
     		};
 
     		/**
@@ -185,7 +224,8 @@ function sortResults(rows, postData)
 		 */
 		if (typeof a[sortKey] == 'string' && typeof b[sortKey] == 'string')
 		{
-			result = (sortDir === "asc") ? b[sortKey].localeCompare(a[sortKey]) : a[sortKey].localeCompare(b[sortKey]);
+			result = (sortDir === "asc") ? b[sortKey].localeCompare(a[sortKey]) : 
+					  					   a[sortKey].localeCompare(b[sortKey]);
 		}
 		else
 		{
@@ -198,6 +238,58 @@ function sortResults(rows, postData)
 		return result;
 		
 	});
+
+}
+
+
+function paginateResults(rows, options)
+{
+
+	/**
+	 * 1. Nr of Pages
+     * 2. Prev / Next Links
+     * 3. Paginated Rows
+     */
+    let toReturn = {
+    	pages : 1,
+    	prev  : false,
+    	next  : false,
+    	rows  : rows
+    }
+    
+    /**
+     * Return default object if number of rows
+     * is less or equal to the page limit
+     */
+    if (rows <= options.limit)
+    {
+    	return toReturn;
+    }
+
+    /**
+     * Calculate number of pages
+     */
+    toReturn.pages = Math.ceil(rows.length / options.limit);
+
+    /**
+     * Get next link
+     */
+    toReturn.next = getNextLink(options.page, toReturn.pages);
+
+    /**
+     * Get previous link
+     */
+    toReturn.prev = getPrevLink(options.page, toReturn.pages);
+
+    /**
+     * Calculate rows
+     */
+    toReturn.rows = getPaginatedRows(rows, options.page, options.limit);
+
+    /**
+     * Return the new object
+     */
+    return toReturn;
 
 }
 
@@ -312,5 +404,76 @@ function getSortAndDirection(item)
 	 */
 	tmpObj[ tmpArr[0] ] = tmpArr[1];
 	return tmpObj;
+
+}
+
+
+/**
+ * [getPrevLink description]
+ */
+function getPrevLink(page, totalPages)
+{
+
+	/**
+	 * First page, no previous link
+	 */
+	if (parseInt(page) === 1)
+	{
+		return false;
+	}
+
+	/**
+	 * Decrement page
+	 */
+	if (page <= totalPages)
+	{
+		page--;
+		return '/' + page;
+	}
+
+}
+
+
+/**
+ * [getNextLink description]
+ */
+function getNextLink(page, totalPages)
+{
+
+	/**
+	 * Last page, no next link
+	 */
+	if (page == totalPages)
+	{
+		return false;
+	}
+
+	/**
+	 * Increment page
+	 */
+	if (page >= 1)
+	{
+		page++;
+		return '/' + page;
+	}
+
+}
+
+
+/**
+ * [getPaginatedRows description]
+ */
+function getPaginatedRows(rows, page, pageLimit)
+{	
+
+	if (page == 1)
+	{
+		return rows.slice(0,pageLimit);
+	}
+
+	let startSlice = (page-1) * pageLimit;
+	let endSlice   = startSlice + pageLimit;
+
+	return rows.slice(startSlice, endSlice);
 
 }

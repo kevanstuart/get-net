@@ -26,3 +26,8 @@ INSERT INTO net_plans (plan_UUID,provider,plan,download,upload,connection_type,p
 ('3cba3cb1-2534-4cae-a9a2-b1e5e600d4d7', 'Ezecom', 'EZECOM Exlusive Basic', '3mbps', '3mbps', 'ADSL', 27.00, 'https://www.ezecom.com.kh/our-services', now()::timestamptz(0), now()::timestamptz(0), true),
 ('d2256547-7651-498f-8744-5735c7d19c48', 'Ezecom', 'EZECOM Exlusive Plus', '5mbps', '5mbps', 'ADSL', 45.00, 'https://www.ezecom.com.kh/our-services', now()::timestamptz(0), now()::timestamptz(0), true),
 ('53d63e20-a1dc-4979-8f71-56b5b3bf1fef', 'Ezecom', 'EZECOM Exlusive Complete', '7mbps', '7mbps', 'ADSL', 69.00, 'https://www.ezecom.com.kh/our-services', now()::timestamptz(0), now()::timestamptz(0), true);
+
+ALTER TABLE net_plans 
+ADD COLUMN provider_logo varchar(50);
+
+UPDATE net_plans SET provider_image = "uploads/ezecom.jpg";

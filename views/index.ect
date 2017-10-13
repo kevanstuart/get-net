@@ -70,7 +70,7 @@
 		<tbody>
 		<% for plan in @plans : %>
 			<tr>
-				<td><%= plan.provider %></td>
+				<td><img src="/img/<%= plan.provider_logo %>" style="height:30px" title="<%= plan.provider %>"/></td>
 				<td><%= plan.plan %></td>
 				<td><%= plan.download %></td>
 				<td><%= plan.upload %></td>
@@ -83,11 +83,23 @@
 <% end %>
 </div>
 
-<div class="container-fluid px-5 pt-4 pb-5">
-	<nav aria-label="Page navigation example">
-  	<ul class="pagination">
-	    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-	    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-  	</ul>
-</nav>
+<div class="container-fluid px-5 pb-5">
+
+<% if @pagination && @pagination.pages > 1: %>
+	<nav class="mt-4" aria-label="Page navigation example">
+	  	<ul class="pagination">
+	  		<% if @pagination.prev: %>
+		    <li class="page-item"><a class="page-link" href="<%= @pagination.prev %>">Previous</a></li>
+		    <% end %>
+
+		    <% for page in [1...parseInt(@pagination.pages)+1] : %>
+		    <li class="page-item"><a class="page-link" href="/<%= page %>"><%= page %></a></li>
+		    <% end %>
+
+		    <% if @pagination.next: %>
+		    <li class="page-item"><a class="page-link" href="<%= @pagination.next %>">Next</a></li>
+		    <% end %>
+	  	</ul>
+	</nav>
+<% end %>
 </div>

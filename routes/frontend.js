@@ -24,51 +24,60 @@ module.exports = function(application, config)
 	application.use(function(req, res, next) 
 	{
 		config.apiUrl = config.baseUrl + config.apiPath;
-		req.config = config;
 		next();
 	});
 
 	/**
 	 * Set index route on GET
 	 */
-	application.get('/', indexGetRoute);
+	application.get('/:page?', indexGetRoute);
 	function indexGetRoute(req, res)
 	{
 
 		/**
+		 * Get page parameter (optional);
+		 */
+		let page = (req.params.page !== undefined) ? req.params.page : 1;
+
+		/**
+		 * GET data
+		 */
+		let getOptions = {
+			url: config.apiUrl + '/' + page
+		};
+
+		/**
 		 * Set API URL && send request to the URL && handle response
 		 */
-		request(config.apiUrl, function(err, response, data) 
+		request(getOptions, function(error, response, data) 
 		{
-
-			/**
-			 * JSON parse data response
-			 */
-			let plans = {
-				plans: JSON.parse(data)
-			};
-
+			
 			/**
 			 * Render the index page
 			 */
-			res.render('index', plans);	
+			res.render('index', JSON.parse(data));
 
-		});
+		});	
 
 	}
 
 	/**
 	 * Set index route on POST
 	 */
-	application.post('/', indexPostRoute);
+	application.post('/:page?', indexPostRoute);
 	function indexPostRoute(req, res)
 	{
+
+		/**
+		 * Get page parameter (optional);
+		 */
+		let page = (req.params.page !== undefined) ? req.params.page : 1;
 
 		/**
 		 * Get POST data
 		 */
 		let postOptions = {
-			url:  config.apiUrl,
+			url : config.apiUrl + '/' + page,
 			form: req.body
 		};
 
@@ -85,6 +94,12 @@ module.exports = function(application, config)
 
 		});
 
+	}
+
+	application.get('/contact', contactFormRoute);
+	function contactFormRoute(req, res)
+	{
+		res.render('contact');
 	}
 
 }

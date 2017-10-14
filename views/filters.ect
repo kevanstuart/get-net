@@ -1,0 +1,53 @@
+<form method="POST" name="ISPCompare" class="container-fluid px-5 py-4">
+	<div class="row">
+		<div class="col">
+			<label for="provider">Provider</label>
+			<select class="form-control custom-select" name="provider">
+				<option value="all" <% if @data && @data.provider == 'all': %>selected<% end %>>
+					All
+				</option>
+				<option value="Ezecom" <% if @data && @data.provider == 'Ezecom': %>selected<% end %>>
+					Ezecom
+				</option>
+			</select>
+		</div>
+		<div class="col">
+			<label for="connection_type">Connection Type</label>
+			<select class="form-control custom-select" name="connection_type">
+				<option value="all" <% if @data && @data.connection_type == 'all': %>selected<% end %>>
+					All
+				</option>
+				<option value="ADSL" <% if @data && @data.connection_type == 'ADSL': %>selected<% end %>>
+					ADSL
+				</option>
+			</select>
+		</div>
+		<div class="col">
+			<label for="sort">Sort By</label>
+			<select class="form-control custom-select" name="sort">
+				<option value="default" <% if @data && @data.sort == 'default': %>selected<% end %>>Default</option>
+				<option value="download_desc" <% if @data && @data.sort == 'download_desc': %>selected<% end %>>Fastest Download Speed</option>
+				<option value="upload_desc" <% if @data && @data.sort == 'upload_desc': %>selected<% end %>>Fastest Upload Speed</option>
+				<option value="price_asc" <% if @data && @data.sort == 'price_asc': %>selected<% end %>>Price (Cheapest First)</option>
+				<option value="price_desc" <% if @data && @data.sort == 'price_desc': %>selected<% end %>>Price (Cheapest Last)</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row mt-3">
+		<div class="col">
+			<label for="max_price">Max Price</label>
+			<input name="max_price" id="max_price" data-value="<% if @data: %><%= @data.max_price %><% end %>"/>
+		</div>
+		<div class="col">
+			<label for="min_download">Min Download Speed</label>
+			<input name="min_download" id="min_download" data-value="<% if @data: %><%= @data.min_download %><% end %>" />
+		</div>
+	</div>
+
+	<div class="row mt-4">
+		<div class="col">
+			<button class="btn btn-primary" type="submit">Show Results</button>
+		</div>
+	</div>
+</form>

@@ -34,27 +34,19 @@ module.exports = function(application, config)
 	function indexGetRoute(req, res)
 	{
 
-		/**
-		 * Get page parameter (optional);
-		 */
+		// Get page parameter (optional);
 		//let page = (req.params.page !== undefined) ? req.params.page : 1;
 
-		/**
-		 * GET data
-		 */
+		// Configure GET parameters
 		let getOptions = {
 			url: config.apiUrl
 		};
 
-		/**
-		 * Set API URL && send request to the URL && handle response
-		 */
+		// Set API URL && send request to the URL && handle response
 		request(getOptions, function(error, response, data) 
 		{
 			
-			/**
-			 * Render the index page
-			 */
+			// Render the index page
 			res.render('index', JSON.parse(data));
 
 		});	
@@ -68,29 +60,25 @@ module.exports = function(application, config)
 	function indexPostRoute(req, res)
 	{
 
-		/**
-		 * Get page parameter (optional);
-		 */
+		console.time('Filters');
+
+		// Get page parameter (optional);
 		//let page = (req.params.page !== undefined) ? req.params.page : 1;
 
-		/**
-		 * Get POST data
-		 */
+		// Configure POST parameters
 		let postOptions = {
 			url : config.apiUrl,
 			form: req.body
 		};
 
-		/**
-		 * Send request to the URL && handle response
-		 */
+		// Send request to the URL && handle response
 		request.post(postOptions, function(err, response, data) 
 		{
 
-			/**
-			 * Render the index page
-			 */
-			res.render('index', JSON.parse(data));	
+			console.timeEnd('Filters');
+
+			// Render the index page
+			res.render('index', JSON.parse(data));
 
 		});
 
@@ -102,7 +90,10 @@ module.exports = function(application, config)
 	application.get('/contact', contactFormRoute);
 	function contactFormRoute(req, res)
 	{
+
+		// Render the contact page
 		res.render('contact');
+
 	}
 
 
@@ -112,7 +103,10 @@ module.exports = function(application, config)
 	application.get('/about', aboutRoute);
 	function aboutRoute(req, res)
 	{
+
+		// Render the about page
 		res.render('about');
+
 	}
 
 }

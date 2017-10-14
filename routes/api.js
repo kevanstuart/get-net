@@ -23,6 +23,7 @@ var sortByToCheck  = ['download', 'upload', 'price'];
  */
 module.exports = function(application, config, db)
 {
+
 	'use strict';
 
 	/**
@@ -30,13 +31,21 @@ module.exports = function(application, config, db)
 	 */
 	application.use(function(req, res, next) 
 	{
-		db.connectToDb({
+
+		// Connection details from config
+		let dbParameters = {
 			database: config.db.database,
 			password: config.db.password,
 			host: config.db.host,
 			user: config.db.user
-		});
+		};
+
+		// Connect to Database
+		db.connectToDb(dbParameters);
+
+		// Next function
 		next();
+
 	});
 
 	/**
@@ -45,40 +54,25 @@ module.exports = function(application, config, db)
 	application.get('/data', function(req, res)
 	{
 
-		/**
-		 * Get all results && push to json
-		 */
-		let result = db.getAllPlans();
+		// Get all results
+		let result = db.getPlans();
+
+		// Process promise result
 		result.then(function (data) 
 		{
 
-			/**
-    		 * Init rows array
-    		 */
+			// Init rows array
     		let rows = data.rows;
-    		
-    		/**
-    		 * Configure page options
-    		 */
-    		/*let pageOptions = {
-    			page : req.params.page,
-    			limit: config.settings.page_limit
-    		};
-			let paginated = paginateResults(rows, pageOptions);*/
 
-			/**
-    		 * Create return json
-    		 */
+			// Create return json
     		let toReturn = {
-    			/*pagination: paginated,*/
-    			plans: rows,
-    			config: config
+    			config: config,
+    			plans : rows
     		};
 
-			/**
-    		 * Send results to Frontend
-    		 */
+			// Send results to Frontend
     		res.json(toReturn);
+
 		});
 
     });
@@ -89,67 +83,142 @@ module.exports = function(application, config, db)
     application.post('/data', function(req, res) 
     {
 
-    	/**
-    	 * Get post data from body
-    	 */
+    	// Get post data from body
     	let postData = req.body;
+    	let filters  = getDbFilters(postData);
+    	let sortBy   = getDbSort(postData);
 
-    	/**
-    	 * Get data and handle promise
-    	 */
-    	let result = db.getAllPlans();
+    	// Get filtered results
+    	let result = db.getPlans(filters, sortBy);
+
+    	// Process promise result
     	result.then(function (data) 
     	{
 
-    		/**
-    		 * Init rows array
-    		 */
+    		// Init rows array
     		let rows = data.rows;
 
-    		/**
-    		 * Get filters & sort information from POST data
-    		 */
-    		let filters = getFilters(postData);
-    		let sortBy  = postData.sort;
-
-
-    		/**
-    		 * Filter rows
-    		 */
-    		let filtered = filterResults(rows, postData, filters);
-
-    		/**
-    		 * Sort filtered rows
-    		 */
-    		let sorted = sortResults(filtered, postData, sortBy);
-
-    		/**
-    		 * Configure page options
-    		 */
-    		/*let pageOptions = {
-    			page : req.params.page,
-    			limit: config.settings.page_limit
-    		};
-			let paginated = paginateResults(sorted, pageOptions);*/
-
-    		/**
-    		 * Create return json
-    		 */
+    		// Create return json
     		let toReturn = {
-    			/*pagination: paginated,*/
-    			plans : sorted,
+    			data  : postData,
     			config: config,
-    			data  : postData
+    			plans : rows,
     		};
 
-    		/**
-    		 * Send filtered results to Frontend
-    		 */
+    		// Send results to Frontend
     		res.json(toReturn);
 
     	});
     	
     });
+}
+
+
+/**
+ * Get filters for the Database Query
+ */
+function getDbFilters(post)
+{
+
+	// New filters array
+	let filters = new Object();
+
+	// Loop through POST data to get filters
+	for (var item in post)
+	{
+
+		// If filter isn't in the list, move on
+		if (!filtersToCheck.includes(item))
+		{
+			continue;
+		}
+
+		// If filter is set to "All", move on
+		if (post[item] == "all" || post[item] == 0)
+		{
+			continue;
+		}
+
+		// Min, Max or Equals filter?
+		if (item.includes("max") || item.includes("min"))
+		{
+			
+			// Split and get filter operation
+			let tmpArr = item.split("_");
+			filters[ tmpArr[1] ] = minMaxEqualsFilter(tmpArr[0], post[item]);
+
+		}
+		else
+		{
+
+			// Get filter operation
+			filters[ item ] = minMaxEqualsFilter("equals", post[item])
+
+		}
+
+	}
+
+	// Return filters to use
+	return filters;
+}
+
+
+/**
+ * Min/Max/Equals function returns the value of
+ * a filter primed for database query creation
+ */
+function minMaxEqualsFilter(operator, value)
+{
+
+	// Determine string or integer and add quotes
+	let tmpVal = (isNaN(value)) ? "'" + value + "'" : parseInt(value);
+
+	// Init filter variable
+	let filter = false;
+
+	// Determine correct operators for database filter
+	switch (operator)
+	{
+
+		case "min":
+			filter = ">= " + tmpVal;
+			break;
+		case "max":
+			filter = "<= " + tmpVal;
+			break;
+		case "equals":
+			filter = "= " + tmpVal
+			break;
+
+	}
+
+	// Return filter value
+	return filter;
+
+}
+
+
+/**
+ * Get sort by string for Database Query
+ */
+function getDbSort(post)
+{
+
+	let sortBy = false;
+
+	// Return false if sorting value is "default"
+	if (post.sort === "default")
+	{
+		return sortBy;
+	}
+
+	// Split and reassemble in correct format
+	tmpArr = post.sort.split("_");
+	sortBy = tmpArr[0] + " " + tmpArr[1].toUpperCase();
+
+	// Return sort by string
+	return sortBy;
+
 }
 
 

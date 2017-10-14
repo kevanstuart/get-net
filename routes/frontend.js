@@ -30,20 +30,20 @@ module.exports = function(application, config)
 	/**
 	 * Set index route on GET
 	 */
-	application.get('/:page?', indexGetRoute);
+	application.get('/', indexGetRoute);
 	function indexGetRoute(req, res)
 	{
 
 		/**
 		 * Get page parameter (optional);
 		 */
-		let page = (req.params.page !== undefined) ? req.params.page : 1;
+		//let page = (req.params.page !== undefined) ? req.params.page : 1;
 
 		/**
 		 * GET data
 		 */
 		let getOptions = {
-			url: config.apiUrl + '/' + page
+			url: config.apiUrl
 		};
 
 		/**
@@ -64,20 +64,20 @@ module.exports = function(application, config)
 	/**
 	 * Set index route on POST
 	 */
-	application.post('/:page?', indexPostRoute);
+	application.post('/', indexPostRoute);
 	function indexPostRoute(req, res)
 	{
 
 		/**
 		 * Get page parameter (optional);
 		 */
-		let page = (req.params.page !== undefined) ? req.params.page : 1;
+		//let page = (req.params.page !== undefined) ? req.params.page : 1;
 
 		/**
 		 * Get POST data
 		 */
 		let postOptions = {
-			url : config.apiUrl + '/' + page,
+			url : config.apiUrl,
 			form: req.body
 		};
 
@@ -96,10 +96,23 @@ module.exports = function(application, config)
 
 	}
 
+	/**
+	 * Set the contact form page route
+	 */
 	application.get('/contact', contactFormRoute);
 	function contactFormRoute(req, res)
 	{
 		res.render('contact');
+	}
+
+
+	/**
+	 * Set the about page route
+	 */
+	application.get('/about', aboutRoute);
+	function aboutRoute(req, res)
+	{
+		res.render('about');
 	}
 
 }

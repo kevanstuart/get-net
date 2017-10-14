@@ -42,7 +42,7 @@ module.exports = function(application, config, db)
 	/**
 	 * Set data endpoint to send JSON back to the frontend
 	 */
-	application.get('/data/:page', function(req, res)
+	application.get('/data', function(req, res)
 	{
 
 		/**
@@ -86,7 +86,7 @@ module.exports = function(application, config, db)
 	/**
 	 * Set data endpoint to take POST data and return JSON to the frontend
 	 */
-    application.post('/data/:page', function(req, res) 
+    application.post('/data', function(req, res) 
     {
 
     	/**

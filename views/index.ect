@@ -65,17 +65,24 @@
 				<th>Upload</th>
 				<th>Connection Type</th>
 				<th>Price</th>
+				<th>Details</th>
 			</tr>
 		</thead>
 		<tbody>
 		<% for plan in @plans : %>
 			<tr>
-				<td><img src="/img/<%= plan.provider_logo %>" style="height:30px" title="<%= plan.provider %>"/></td>
+				<td>
+					<img src="/img/<%= plan.provider_logo %>" style="height:30px" 
+						 title="<%= plan.provider %>" />
+				</td>
 				<td><%= plan.plan %></td>
 				<td><%= plan.download %></td>
 				<td><%= plan.upload %></td>
 				<td><%= plan.connection_type %></td>
 				<td>$<%= plan.price %></td>
+				<td>
+					<a class="btn btn-primary" href="<%= plan.link %>">View Deal</a>
+				</td>
 			</tr>
 		<% end %>
 		<tbody>

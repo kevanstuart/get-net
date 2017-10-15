@@ -18,15 +18,15 @@
 		<tbody>
 		<% for plan in @plans : %>
 			<tr>
-				<td>
+				<td class="align-middle">
 					<img src="/img/<%= plan.provider_logo %>" style="height:30px" 
 						 title="<%= plan.provider %>" />
 				</td>
-				<td><%= plan.plan %></td>
-				<td><%= plan.download %></td>
-				<td><%= plan.upload %></td>
-				<td><%= plan.connection_type %></td>
-				<td>$<%= plan.price %></td>
+				<td class="align-middle"><%= plan.plan %></td>
+				<td class="align-middle"><%= plan.download %></td>
+				<td class="align-middle"><%= plan.upload %></td>
+				<td class="align-middle"><%= plan.connection_type %></td>
+				<td class="align-middle">$<%= plan.price %></td>
 				<td>
 					<a class="btn btn-primary" href="<%= plan.link %>">View Deal</a>
 				</td>

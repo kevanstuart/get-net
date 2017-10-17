@@ -80,12 +80,12 @@ module.exports = function(application, config)
     {
 
     	// Get post data from body
-    	let postData = req.body;
-    	let filters  = getDbFilters(postData);
-    	let sortBy   = getDbSort(postData);
+    	let postData  = req.body;
+    	let dbFilters = getDbFilters(postData);
+    	let dbSortBy  = getDbSort(postData);
 
     	// Get filtered results
-    	let result = pSql.getPlans(filters, sortBy);
+    	let result = pSql.getPlans(dbFilters, dbSortBy);
 
     	// Process promise result
     	result.then(function (data) 
@@ -96,9 +96,8 @@ module.exports = function(application, config)
 
     		// Create return json
     		let toReturn = {
-    			data  : postData,
-    			config: config,
-    			plans : rows,
+    			post  : postData,
+    			plans : rows
     		};
 
     		// Send results to Frontend
@@ -184,7 +183,7 @@ function getDbFilters(post)
 		}
 
 		// If filter is set to "All", move on
-		if (post[item] == "all" || post[item] == 0)
+		if (post[item] == "All" || post[item] == 0)
 		{
 			continue;
 		}

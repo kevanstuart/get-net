@@ -7,7 +7,10 @@
             <label for="provider">Provider</label>
             <select class="form-control custom-select" name="provider">
                 <% for provider in @filters.providers : %>
-                <option value="<%= provider %>"><%= provider %></option>
+                <option value="<%= provider %>" 
+                    <% if @post && @post.provider == provider : %>selected<% end %> >
+                    <%= provider %>
+                </option>
                 <% end %>
             </select>
         </div>
@@ -19,7 +22,10 @@
             <label for="connection_type">Connection Type</label>
             <select class="form-control custom-select" name="connection_type">
                 <% for type in @filters.types : %>
-                <option value="<%= type %>"><%= type %></option>
+                <option value="<%= type %>" 
+                    <% if @post && @post.connection_type == type : %>selected<% end %>>
+                    <%= type %>
+                </option>
                 <% end %>
             </select>
         </div>
@@ -31,7 +37,10 @@
             <label for="sort">Sort By</label>
             <select class="form-control custom-select" name="sort">
                 <% for key in Object.keys(@filters.sort) : %>
-                <option value="<%= key %>"><%= @filters.sort[key] %></option>
+                <option value="<%= key %>" 
+                    <% if @post && @post.sort == key : %>selected<% end %>>
+                    <%= @filters.sort[key] %>
+                </option>
                 <% end %>
             </select>
         </div>
@@ -47,8 +56,13 @@
             <label for="max_price">Max Price</label>
             <input name="max_price" id="max_price" 
                 data-min="<%= @filters.prices[0] %>" 
-                data-max="<%= @filters.prices[1] %>" 
-                data-from="<%= @filters.prices[1] %>" />
+                data-max="<%= @filters.prices[1] %>"
+
+                <% if (@post && (@post.max_price != @filters.prices[1])) : %>
+                data-from="<%= @post.max_price %>"
+                <% else : %> 
+                data-from="<%= @filters.prices[1] %>"
+                <% end %> />
         </div>
         <% end %>
 
@@ -57,8 +71,14 @@
         <div class="col">
             <label for="min_download">Min Download Speed</label>
             <input name="min_download" id="min_download"
-                data-values="<%= @filters.downloads %>"
-                data-from="<%= @filters.downloads[0] %>" />
+                data-values="<%= @filters.downloads %>" 
+
+                <% if (@post && (@post.min_download != @filters.downloads[0])) : %>
+                data-from="<%= @filters.downloads.indexOf(@post.min_download) %>"
+                <% else : %>
+                data-from="0"
+                <% end %>
+            />
         </div>
         <% end %>
 

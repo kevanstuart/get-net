@@ -95,10 +95,9 @@ module.exports = function(application, config)
 		request.post(postOptions, function(err, response, data) 
 		{
 
-			// Assign and merge data objects
+			// Assign data and add filters
 			let rowData = JSON.parse(data);
-			let filterData  = { filters: req.filters };
-			Object.assign(rowData, filterData);
+			rowData.filters = req.filters;
 
 			// Render the index page
 			res.render('index', rowData);

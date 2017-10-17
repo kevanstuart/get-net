@@ -1,5 +1,5 @@
 <% extend 'layouts/default' %>
-<% include 'filters', { filters: @filters }  %>
+<% include 'filters', { filters: @filters, post: @post }  %>
 
 <div class="container-fluid px-5 py-4">
 <% if @plans?.length > 0 : %>

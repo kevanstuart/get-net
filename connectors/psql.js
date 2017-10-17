@@ -7,13 +7,13 @@
 
 
 /**
- * Require libraries
+ * Require Node Postgres Pooling
  */
-const Pool  = require('pg').Pool;
+const pgPool = require('pg').Pool;
 
 
 /**
- * Configure PSQL
+ * Empty variable to hold Pool
  */
 var pool;
 
@@ -25,14 +25,65 @@ module.exports =
 {
 
     /**
-     * Connect to the database by initializing a 
-     * connection Pool 
+     * Create a new pool
      */
-    connectToDb: function(db_config)
+    createPool: function(dbSettings)
     {
 
-        // Create a pool from the database config
-        pool = new Pool(db_config);
+        // Create DB Pool
+        pool = new pgPool(dbSettings);
+
+    },
+
+    /**
+     * Get the filters
+     * @return {[type]} [description]
+     */
+    getFilters: async function()
+    {
+
+        // Create client connection
+        var client = await pool.connect();
+        try
+        {
+
+            // Create queries
+            let filterQueries = {
+                downloads: "SELECT distinct(download) FROM net_plans WHERE active = true ORDER BY download ASC",
+                providers: "SELECT distinct(provider) FROM net_plans WHERE active = true ORDER BY provider ASC",
+                types    : "SELECT distinct(connection_type) FROM net_plans WHERE active = true ORDER BY connection_type ASC"
+            };
+            
+            // Process queries
+            let providers = await client.query(filterQueries.providers);
+            let downloads = await client.query(filterQueries.downloads);
+            let types     = await client.query(filterQueries.types);
+            
+            // Return data
+            return {
+                providerList: providers.rows,
+                downloadList: downloads.rows,
+                typesList   : types.rows
+            }
+
+        }
+        catch (error)
+        {
+
+            // Catch Errors
+            console.log(error);
+
+            // Return null
+            return null;
+
+        }
+        finally
+        {
+
+            // Release client to the pool
+            client.release();
+
+        }
 
     },
 
@@ -43,15 +94,17 @@ module.exports =
     {
 
         // Create client connection
-        const client = await pool.connect();
+        var client = await pool.connect();
         try 
         {
 
             // Create query
             let query = buildQuery(filters, sort);
 
-            // Execute query && return
-            let result = await pool.query(query);
+            // Execute query
+            let result = await client.query(query);
+
+            // Return result
             return result;
 
         }
@@ -60,6 +113,8 @@ module.exports =
 
             // Catch Errors
             console.log(error);
+
+            // Return null
             return null;
 
         }
@@ -106,7 +161,7 @@ function buildQuery(filters = false, sort = false)
 
     }
 
-    // Add sorting
+    // Add sorting for ORDER BY
     if (sort)
     {
         query += " ORDER BY " + sort

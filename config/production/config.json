@@ -7,12 +7,12 @@
         "port"       : 3000
     },
     "db": {
-        "url"        : "postgres://anxzvxoqpzuerp:c22f0313925246f7d48977fa3fb6c2e3764b7e2fe1f42ee0420c2e2d21d34744@ec2-54-235-102-25.compute-1.amazonaws.com:5432/d58d0vlqepgnoc",
         "password"   : "c22f0313925246f7d48977fa3fb6c2e3764b7e2fe1f42ee0420c2e2d21d34744",
         "database"   : "d58d0vlqepgnoc",
         "user"       : "anxzvxoqpzuerp",
         "host"       : "ec2-54-235-102-25.compute-1.amazonaws.com"
     },
     "baseUrl"        : "https://whichisp.herokuapp.com",
-    "apiPath"        : "/data"
+    "plansPath"      : "/api/getplans",
+    "filtersPath"    : "/api/getfilters"
 }

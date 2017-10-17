@@ -37,12 +37,6 @@ const ect         = require('ect');
 
 
 /**
- * Require database connector
- */
-const db_psql = require(dir + 'connectors/psql');
-
-
-/**
  * Configure ECT Rendering Engine
  */
 var renderer = ect({ 
@@ -65,6 +59,7 @@ var compress = compression({
  */
 var application = express();
 
+
 /**
  * Configuration for Application
  */
@@ -85,7 +80,7 @@ application.use(compress);
  * 2. api
  */
 require('./routes/frontend')(application, config);
-require('./routes/api')(application, config, db_psql);
+require('./routes/api')(application, config);
 
 
 /**

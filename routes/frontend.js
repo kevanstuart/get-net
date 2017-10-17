@@ -16,38 +16,64 @@ const request = require('request');
  */
 module.exports = function(application, config)
 {
+
 	'use strict';
 
 	/**
-	 * Set config into request
+	 * Set Route URL's && Callbacks
 	 */
-	application.use(function(req, res, next) 
+	application.get('/', getFilters, indexGetRoute);
+	application.post('/', getFilters, indexPostRoute);
+	application.get('/about', aboutRoute);
+	application.get('/contact', contactFormRoute);
+
+	/**
+	 * Get dynamic filters to insert into index page
+	 */
+	function getFilters(req, res, next)
 	{
-		config.apiUrl = config.baseUrl + config.apiPath;
-		next();
-	});
+
+		// Set Filters URL
+		let filtersOptions = { 
+			url: config.baseUrl + config.filtersPath 
+		};
+
+    	// Get Filters from API URL
+		request(filtersOptions, function(error, response, data) 
+		{
+
+			// Add filters to request
+			req.filters = JSON.parse(data);
+			
+			// Next
+			next();
+
+		});
+
+	}
 
 	/**
 	 * Set index route on GET
 	 */
-	application.get('/', indexGetRoute);
-	function indexGetRoute(req, res)
+	function indexGetRoute(req, res, next)
 	{
-
-		// Get page parameter (optional);
-		//let page = (req.params.page !== undefined) ? req.params.page : 1;
 
 		// Configure GET parameters
 		let getOptions = {
-			url: config.apiUrl
+			url: config.baseUrl + config.plansPath
 		};
 
 		// Set API URL && send request to the URL && handle response
 		request(getOptions, function(error, response, data) 
 		{
-			
+
+			// Assign and merge data objects
+			let rowData = JSON.parse(data);
+			let filterData  = { filters: req.filters };
+			Object.assign(rowData, filterData);
+
 			// Render the index page
-			res.render('index', JSON.parse(data));
+			res.render('index', rowData);
 
 		});	
 
@@ -56,18 +82,12 @@ module.exports = function(application, config)
 	/**
 	 * Set index route on POST
 	 */
-	application.post('/', indexPostRoute);
-	function indexPostRoute(req, res)
+	function indexPostRoute(req, res, next)
 	{
-
-		console.time('Filters');
-
-		// Get page parameter (optional);
-		//let page = (req.params.page !== undefined) ? req.params.page : 1;
 
 		// Configure POST parameters
 		let postOptions = {
-			url : config.apiUrl,
+			url : config.baseUrl + config.plansPath,
 			form: req.body
 		};
 
@@ -75,10 +95,12 @@ module.exports = function(application, config)
 		request.post(postOptions, function(err, response, data) 
 		{
 
-			console.timeEnd('Filters');
+			// Assign data and add filters
+			let rowData = JSON.parse(data);
+			rowData.filters = req.filters;
 
 			// Render the index page
-			res.render('index', JSON.parse(data));
+			res.render('index', rowData);
 
 		});
 
@@ -87,7 +109,6 @@ module.exports = function(application, config)
 	/**
 	 * Set the contact form page route
 	 */
-	application.get('/contact', contactFormRoute);
 	function contactFormRoute(req, res)
 	{
 
@@ -100,7 +121,6 @@ module.exports = function(application, config)
 	/**
 	 * Set the about page route
 	 */
-	application.get('/about', aboutRoute);
 	function aboutRoute(req, res)
 	{
 

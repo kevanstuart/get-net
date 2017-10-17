@@ -1,54 +1,93 @@
 <form method="POST" name="ISPCompare" class="container-fluid px-5 py-4">
-	<div class="row">
-		<div class="col">
-			<label for="provider">Provider</label>
-			<select class="form-control custom-select" name="provider">
-				<option value="all" <% if @data && @data.provider == 'all': %>selected<% end %>>
-					All
-				</option>
-				<option value="Ezecom" <% if @data && @data.provider == 'Ezecom': %>selected<% end %>>
-					Ezecom
-				</option>
-			</select>
-		</div>
-		<div class="col">
-			<label for="connection_type">Connection Type</label>
-			<select class="form-control custom-select" name="connection_type">
-				<option value="all" <% if @data && @data.connection_type == 'all': %>selected<% end %>>
-					All
-				</option>
-				<option value="ADSL" <% if @data && @data.connection_type == 'ADSL': %>selected<% end %>>
-					ADSL
-				</option>
-			</select>
-		</div>
-		<div class="col">
-			<label for="sort">Sort By</label>
-			<select class="form-control custom-select" name="sort">
-				<option value="default" <% if @data && @data.sort == 'default': %>selected<% end %>>Default</option>
-				<option value="download_desc" <% if @data && @data.sort == 'download_desc': %>selected<% end %>>Fastest Download Speed</option>
-				<option value="upload_desc" <% if @data && @data.sort == 'upload_desc': %>selected<% end %>>Fastest Upload Speed</option>
-				<option value="price_asc" <% if @data && @data.sort == 'price_asc': %>selected<% end %>>Price (Cheapest First)</option>
-				<option value="price_desc" <% if @data && @data.sort == 'price_desc': %>selected<% end %>>Price (Cheapest Last)</option>
-			</select>
-		</div>
-	</div>
+    <div class="row">
 
-	<div class="row mt-3">
-		<div class="col">
-			<label for="max_price">Max Price</label>
-			<input name="max_price" id="max_price" data-value="<% if @data: %><%= @data.max_price %><% end %>"/>
-		</div>
-		<div class="col">
-			<label for="min_download">Min Download Speed</label>
-			<input name="min_download" id="min_download" data-value="<% if @data: %><%= @data.min_download %><% end %>" />
-		</div>
-	</div>
+        <!-- Providers Filter -->
+        <% if @filters.providers?.length > 0 : %>
+        <div class="col">
+            <label for="provider">Provider</label>
+            <select class="form-control custom-select" name="provider">
+                <% for provider in @filters.providers : %>
+                <option value="<%= provider %>" 
+                    <% if @post && @post.provider == provider : %>selected<% end %> >
+                    <%= provider %>
+                </option>
+                <% end %>
+            </select>
+        </div>
+        <% end %>
 
-	<div class="row mt-4">
-		<div class="col">
-			<button class="btn btn-primary" type="submit">Show Results</button>
-			<!-- <button class="btn btn-dark btn-link" type="reset">Reset filters</button> -->
-		</div>
-	</div>
+        <!-- Connection Types Filter -->
+        <% if @filters.types?.length > 0 : %>
+        <div class="col">
+            <label for="connection_type">Connection Type</label>
+            <select class="form-control custom-select" name="connection_type">
+                <% for type in @filters.types : %>
+                <option value="<%= type %>" 
+                    <% if @post && @post.connection_type == type : %>selected<% end %>>
+                    <%= type %>
+                </option>
+                <% end %>
+            </select>
+        </div>
+        <% end %>
+
+        <!-- Sorting Dropdown -->
+        <% if @filters.sort : %>
+        <div class="col">
+            <label for="sort">Sort By</label>
+            <select class="form-control custom-select" name="sort">
+                <% for key in Object.keys(@filters.sort) : %>
+                <option value="<%= key %>" 
+                    <% if @post && @post.sort == key : %>selected<% end %>>
+                    <%= @filters.sort[key] %>
+                </option>
+                <% end %>
+            </select>
+        </div>
+        <% end %>
+
+    </div>
+
+    <div class="row mt-3">
+
+        <!-- Max Price Filter -->
+        <% if @filters.prices?.length > 0 : %>
+        <div class="col">
+            <label for="max_price">Max Price</label>
+            <input name="max_price" id="max_price" 
+                data-min="<%= @filters.prices[0] %>" 
+                data-max="<%= @filters.prices[1] %>"
+
+                <% if (@post && (@post.max_price != @filters.prices[1])) : %>
+                data-from="<%= @post.max_price %>"
+                <% else : %> 
+                data-from="<%= @filters.prices[1] %>"
+                <% end %> />
+        </div>
+        <% end %>
+
+        <!-- Min Download Filter -->
+        <% if @filters.downloads?.length > 0 : %>
+        <div class="col">
+            <label for="min_download">Min Download Speed</label>
+            <input name="min_download" id="min_download"
+                data-values="<%= @filters.downloads %>" 
+
+                <% if (@post && (@post.min_download != @filters.downloads[0])) : %>
+                data-from="<%= @filters.downloads.indexOf(@post.min_download) %>"
+                <% else : %>
+                data-from="0"
+                <% end %>
+            />
+        </div>
+        <% end %>
+
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <button class="btn btn-primary" type="submit">Show Results</button>
+            <!-- <button class="btn btn-dark btn-link" type="reset">Reset filters</button> -->
+        </div>
+    </div>
 </form>

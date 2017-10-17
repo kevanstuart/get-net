@@ -7,12 +7,12 @@
         "port"       : 3000
     },
     "db": {
-        "url"        : "postgres://localhost:5432/whichisp",
     	"password"   : "",
     	"database"   : "whichisp",
     	"user"       : "kevanstuart",
     	"host"       : "localhost"
     },
     "baseUrl"        : "http://localhost:3000",
-    "apiPath"        : "/data"
+    "plansPath"      : "/api/getplans",
+    "filtersPath"    : "/api/getfilters"
 }

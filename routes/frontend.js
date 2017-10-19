@@ -22,9 +22,9 @@ module.exports = function(application, config)
 	/**
 	 * Set Route URL's && Callbacks
 	 */
-	application.get('/', getFilters, indexGetRoute);
-	application.post('/', getFilters, indexPostRoute);
-	application.get('/about', aboutRoute);
+	application.get( '/:page?', getFilters, indexGetRoute,  indexPageRoute);
+	application.post('/:page?', getFilters, indexPostRoute, indexPageRoute);
+	application.get('/about', aboutPageRoute);
 	application.get('/contact', contactFormRoute);
 
 	/**
@@ -34,16 +34,16 @@ module.exports = function(application, config)
 	{
 
 		// Set Filters URL
-		let filtersOptions = { 
-			url: config.baseUrl + config.filtersPath 
+		let options = { 
+			url: config.baseUrl + config.filtersPath
 		};
 
     	// Get Filters from API URL
-		request(filtersOptions, function(error, response, data) 
+		request(options, function(error, response, data) 
 		{
 
 			// Add filters to request
-			req.filters = JSON.parse(data);
+			res.locals.filters = JSON.parse(data);
 			
 			// Next
 			next();
@@ -58,24 +58,21 @@ module.exports = function(application, config)
 	function indexGetRoute(req, res, next)
 	{
 
-		// Configure GET parameters
-		let getOptions = {
-			url: config.baseUrl + config.plansPath
+		// I'm checking for a page number
+		let pageNum = req.params.page || 1;
+
+		// Check whether filters exist in session
+		let filters = req.session.filters || false;
+
+		// Options to pass to request
+		res.locals.options = {
+			url   : config.baseUrl + config.plansPath,
+			form  : { page: pageNum, filters: filters},
+			method: "POST"
 		};
 
-		// Set API URL && send request to the URL && handle response
-		request(getOptions, function(error, response, data) 
-		{
-
-			// Assign and merge data objects
-			let rowData = JSON.parse(data);
-			let filterData  = { filters: req.filters };
-			Object.assign(rowData, filterData);
-
-			// Render the index page
-			res.render('index', rowData);
-
-		});	
+		// Because
+		next();
 
 	}
 
@@ -85,26 +82,49 @@ module.exports = function(application, config)
 	function indexPostRoute(req, res, next)
 	{
 
-		// Configure POST parameters
-		let postOptions = {
-			url : config.baseUrl + config.plansPath,
-			form: req.body
+		// I'm checking for a page number
+		let pageNum = req.params.page || 1;
+
+		// Check whether filters exist in session
+		let filters = req.body || false;
+
+		// Configure parameters
+		res.locals.options = {
+			url   : config.baseUrl + config.plansPath,
+			form  : { page: pageNum, filters: filters},
+			method: "POST"
 		};
 
+		// Because
+		next();
+
+	}
+
+
+	function indexPageRoute(req, res, next)
+	{
+
 		// Send request to the URL && handle response
-		request.post(postOptions, function(err, response, data) 
+		request(res.locals.options, function(error, response, data) 
 		{
 
 			// Assign data and add filters
-			let rowData = JSON.parse(data);
-			rowData.filters = req.filters;
+			let appData = JSON.parse(data);
+			appData.filters = res.locals.filters;
+
+			// Assign filter post to session if filtering exists
+			if (appData.post)
+			{
+				req.session.filters = appData.post;
+			}
 
 			// Render the index page
-			res.render('index', rowData);
+			res.render('index', appData);
 
 		});
 
 	}
+
 
 	/**
 	 * Set the contact form page route
@@ -121,7 +141,7 @@ module.exports = function(application, config)
 	/**
 	 * Set the about page route
 	 */
-	function aboutRoute(req, res)
+	function aboutPageRoute(req, res)
 	{
 
 		// Render the about page

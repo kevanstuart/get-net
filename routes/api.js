@@ -40,38 +40,8 @@ module.exports = function(application, config)
 	/**
 	 * Setting API Route URL's && Callbacks
 	 */
-	application.get('/api/getplans', plansGetRoute);
 	application.post('/api/getplans', plansPostRoute);
 	application.get('/api/getfilters', filtersGetRoute);
-
-	/**
-	 * Set data endpoint to send JSON back to the frontend
-	 */
-	function plansGetRoute(req, res)
-	{
-
-		// Get all results
-		let result = pSql.getPlans();
-
-		// Process promise result
-		result.then(function (data) 
-		{
-
-			// Init rows array
-    		let rows = data.rows;
-
-			// Create return json
-    		let toReturn = {
-    			config: config,
-    			plans : rows
-    		};
-
-			// Send results to Frontend
-    		res.json(toReturn);
-
-		});
-
-    }
 
 	/**
 	 * Set data endpoint to take POST data and return JSON to the frontend
@@ -79,26 +49,47 @@ module.exports = function(application, config)
     function plansPostRoute(req, res) 
     {
 
-    	// Get post data from body
-    	let postData  = req.body;
-    	let dbFilters = getDbFilters(postData);
-    	let dbSortBy  = getDbSort(postData);
+    	// Set limit parameter
+		let dbLimit  = config.settings.page_limit;
+
+		// Set offset parameter
+		let dbOffset = (req.body.page -1) * dbLimit;
+
+		// We need to set these as default
+		let dbFilters = false;
+		let dbSortBy  = false;
+
+		// Change the default if filters exist
+		if (req.body.filters != "false")
+		{
+
+			dbFilters = getDbFilters(req.body.filters);
+			dbSortBy  = getDbSort(req.body.filters);
+
+		}
 
     	// Get filtered results
-    	let result = pSql.getPlans(dbFilters, dbSortBy);
+    	let result = pSql.getPlans(dbLimit + 1, dbOffset, dbFilters, dbSortBy);
 
     	// Process promise result
     	result.then(function (data) 
     	{
 
-    		// Init rows array
-    		let rows = data.rows;
+    		// Check next set exists
+    		let next = (data.rows.length > dbLimit) ? data.rows.pop() : false;
 
     		// Create return json
     		let toReturn = {
-    			post  : postData,
-    			plans : rows
+    			page  : req.body.page,
+    			plans : data.rows,
+    			next  : next
     		};
+
+    		// Add filters if set
+    		if (req.body.filters != "false")
+			{
+				toReturn.post = req.body.filters;
+			}
 
     		// Send results to Frontend
     		res.json(toReturn);

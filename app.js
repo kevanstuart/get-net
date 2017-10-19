@@ -37,6 +37,13 @@ const ect         = require('ect');
 
 
 /**
+ * Session Handling
+ */
+const session  = require('express-session');
+const memstore = require('memorystore')(session);
+
+
+/**
  * Configure ECT Rendering Engine
  */
 var renderer = ect({ 
@@ -72,6 +79,13 @@ application.use(express.static(config.settings.statics, { maxage:'1w' }));
 application.use(parser.urlencoded({ extended: true }));
 application.use(parser.json());
 application.use(compress);
+
+application.use(session({
+    store : new memstore({ checkPeriod: 86400000 }),
+    secret: 'whichisp_kevanstuart_7100',
+    saveUninitialized: false,
+    resave: false
+}));
 
 
 /**

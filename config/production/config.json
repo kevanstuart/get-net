@@ -1,6 +1,6 @@
 {
     "settings": {
-        "page_limit" : 10,
+        "page_limit" : 15,
         "statics"    : "public",
         "engine"     : "ect",
         "views"      : "views",

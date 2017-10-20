@@ -22,10 +22,10 @@ module.exports = function(application, config)
 	/**
 	 * Set Route URL's && Callbacks
 	 */
-	application.get( '/:page?', getFilters, indexGetRoute,  indexPageRoute);
-	application.post('/:page?', getFilters, indexPostRoute, indexPageRoute);
 	application.get('/about', aboutPageRoute);
 	application.get('/contact', contactFormRoute);
+	application.get( '/:page?', getFilters, indexGetRoute,  indexPageRoute);
+	application.post('/:page?', getFilters, indexPostRoute, indexPageRoute);
 
 	/**
 	 * Get dynamic filters to insert into index page

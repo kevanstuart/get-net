@@ -12,17 +12,38 @@
         <link rel="stylesheet" href="/css/bootstrap-reboot.min.css" />
         <link rel="stylesheet" href="/css/ion.rangeSlider.css" />
         <link rel="stylesheet" href="/css/ion.rangeSlider.skin.css" />
+
+        <style>
+            .logo:after 
+            {
+                text-transform:uppercase;
+                vertical-align:super;
+                display:inline-block;
+                background:#0a2342;
+                border-radius:50%;
+                font-size:1.625rem;
+                margin-left:-15px;
+                color:#db5461;
+                content:"KH";
+                height:37px;
+                width:37px;
+                padding-top:3px;
+            }
+        </style>
     </head>
 
     <body>
-        <header class="bg-primary container-fluid p-4">
-            <h1 class="display-4 text-center text-lowercase m-0">
-                <a class="nav-link text-black logo p-0 d-inline" href="/">Which ISP Cambodia</a>
+        <header class="bg-primary container-fluid p-2">
+            <h1 class="display-4 text-center text-lowercase m-0 mb-3">
+                <a class="nav-link text-info logo p-0 d-inline" href="/">
+                    getweb
+                </a>
             </h1>
-            <p class="text-light text-center text-uppercase">
-                Cambodia's Internet Provider Comparison Tool
+            <p class="text-info text-center text-uppercase pt-1">
+                Cambodia's Internet Provider Comparison Site
             </p>
         </header>
+        
 
         <main>
             <% content %>

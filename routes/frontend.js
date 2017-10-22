@@ -8,8 +8,17 @@
 /**
  * Module Requires
  * 1. Request
+ * 2. Sendgrid Mail
  */
 const request = require('request');
+const helper  = require('sendgrid').mail;
+
+
+/**
+ * Elements in the contact form
+ */
+var formElements = [ 'name', 'email', 'message' ];
+
 
 /**
  * Frontend Routes function
@@ -22,8 +31,9 @@ module.exports = function(application, config)
 	/**
 	 * Set Route URL's && Callbacks
 	 */
-	application.get('/about', aboutPageRoute);
+	/*application.get('/about', aboutPageRoute);
 	application.get('/contact', contactFormRoute);
+	application.post('/contact', processContactForm, contactFormRoute);*/
 	application.get( '/:page?', getFilters, indexGetRoute,  indexPageRoute);
 	application.post('/:page?', getFilters, indexPostRoute, indexPageRoute);
 
@@ -101,6 +111,9 @@ module.exports = function(application, config)
 	}
 
 
+	/**
+	 * Final index page route for request and rendering
+	 */
 	function indexPageRoute(req, res, next)
 	{
 
@@ -126,10 +139,19 @@ module.exports = function(application, config)
 	}
 
 
+	function processContactForm(req, res, next)
+	{
+
+		// Render the form
+		next();
+
+	}
+
+
 	/**
 	 * Set the contact form page route
 	 */
-	function contactFormRoute(req, res)
+	function contactFormRoute(req, res, next)
 	{
 
 		// Render the contact page

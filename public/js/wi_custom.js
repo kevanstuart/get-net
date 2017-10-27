@@ -14,7 +14,7 @@ function basicSliderSetup()
 {
 
     // Generic options
-    let sliderOptions = {
+    var sliderOptions = {
         force_edges:true,
         max_postfix:"+",
         grid:true
@@ -25,19 +25,11 @@ function basicSliderSetup()
     $("#max_price").ionRangeSlider( sliderOptions );
 
     // Custom configuration
-    let minDownload = $("#minsdownload").data("ionRangeSlider");
-    minDownload.update({ grid_snap: true });
+    var minDownload = $("#min_download").data("ionRangeSlider");
+    minDownload.update({ grid_snap: true, postfix: 'mbps' });
 
     // Custom configuration
-    let maxPrice = $("#max_price").data("ionRangeSlider");
+    var maxPrice = $("#max_price").data("ionRangeSlider");
     maxPrice.update({ prefix: "$" });
 
 }
-
-
-
-/**
- * Reset the sliders
- */
-function resetSliders()
-{}

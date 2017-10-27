@@ -74,7 +74,7 @@
                 data-values="<%= @filters.downloads %>" 
 
                 <% if (@post && (@post.min_download != @filters.downloads[0])) : %>
-                data-from="<%= @filters.downloads.indexOf(@post.min_download) %>"
+                data-from="<%= @filters.downloads.indexOf(parseInt(@post.min_download)) %>"
                 <% else : %>
                 data-from="0"
                 <% end %>

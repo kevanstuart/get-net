@@ -23,10 +23,13 @@
 						 title="<%= plan.provider %>" />
 				</td>
 				<td class="align-middle"> <%= plan.plan %></td>
-				<td class="align-middle"> <%= plan.download %></td>
-				<td class="align-middle"> <%= plan.upload %></td>
+				<td class="align-middle"> <%= plan.download %>mbps</td>
+				<td class="align-middle"> <%= plan.upload %>mbps</td>
 				<td class="align-middle"> <%= plan.connection_type %></td>
-				<td class="align-middle">$<%= plan.price %></td>
+				<td class="align-middle">
+					$<%= plan.price %>
+					<% if (plan.price_model == 'per year') : %><small>*</small><% end %>
+				</td>
 				<td>
 					<a class="btn btn-primary" href="<%= plan.link %>">View Deal</a>
 				</td>
@@ -34,6 +37,7 @@
 		<% end %>
 		<tbody>
 	</table>
+	<small class="d-block text-right mt-2">* Price is per year and not offered monthly</small>
 <% end %>
 </div>
 

@@ -10,6 +10,7 @@
  * Module / File Requires
  */
 const pSql = require('../connectors/psql');
+const cors = require('cors');
 
 
 /**
@@ -33,6 +34,15 @@ module.exports = function(application, config)
 	'use strict';
 
 	/**
+	 * Enable CORS options
+	 */
+	let corsOptions = {
+  		optionsSuccessStatus: 200,
+  		origin: config.baseUrl,
+  		methods:'GET, POST'
+	}
+
+	/**
 	 * Create a new pool
 	 */
 	pSql.createPool(config.db);
@@ -40,13 +50,13 @@ module.exports = function(application, config)
 	/**
 	 * Setting API Route URL's && Callbacks
 	 */
-	application.post('/api/getplans', plansPostRoute);
-	application.get('/api/getfilters', filtersGetRoute);
+	application.post('/api/getplans', cors(corsOptions), plansPostRoute);
+	application.get('/api/getfilters', cors(corsOptions), filtersGetRoute);
 
 	/**
 	 * Set data endpoint to take POST data and return JSON to the frontend
 	 */
-    function plansPostRoute(req, res) 
+    function plansPostRoute(req, res, next) 
     {
 
     	// Set limit parameter
@@ -101,7 +111,7 @@ module.exports = function(application, config)
     /**
      * Set endpoint to retrieve filter values from the database
      */
-    function filtersGetRoute(req, res) 
+    function filtersGetRoute(req, res, next) 
     {
 
     	// Get sort list
@@ -116,10 +126,10 @@ module.exports = function(application, config)
 
     		// Format return
     		let toReturn = {
+    			types    : data.typesList.map(val => val.connection_type),
     			providers: data.providerList.map(val => val.provider),
     			downloads: data.downloadList.map(val => val.download),
-    			types    : data.typesList.map(val => val.connection_type),
-    			prices   : [0, 200],
+    			prices   : [0, data.pricesList[0].max],
     			sort     : sort
     		};
 
@@ -129,6 +139,7 @@ module.exports = function(application, config)
 
     		// Send results to Frontend
     		res.json(toReturn);
+    		
     	});
 
     }

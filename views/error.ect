@@ -1,3 +1,9 @@
-<% extend 'layouts/default.ect' %>
+<% extend 'layouts/custom-err.ect' %>
 
-<h1>Error</h1>
+<h1 class="display-4 text-center p-4">
+    <%= @error.status %>&nbsp;-&nbsp;<%= @error.name %>
+</h1>
+
+<p class="container-fluid bg-dark text-light text-center p-4 mt-4">
+    <%= @error.message %>
+</p>

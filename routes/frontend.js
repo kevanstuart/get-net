@@ -11,7 +11,7 @@
  * 2. Sendgrid Mail
  */
 const request = require('request');
-const helper  = require('sendgrid').mail;
+//const helper  = require('sendgrid').mail;
 
 
 /**
@@ -34,8 +34,39 @@ module.exports = function(application, config)
 	/*application.get('/about', aboutPageRoute);
 	application.get('/contact', contactFormRoute);
 	application.post('/contact', processContactForm, contactFormRoute);*/
+	application.param('page', checkParameter);
 	application.get( '/:page?', getFilters, indexGetRoute,  indexPageRoute);
 	application.post('/:page?', getFilters, indexPostRoute, indexPageRoute);
+
+
+	/**
+	 * Handling a parameter check - needs to be a number
+	 */
+	function checkParameter(req, res, next, page)
+	{
+
+		// Page needs to be a number or not zero
+		if (isNaN(page) || page == 0)
+		{
+
+			// Create a 404 error
+			let error = new Error();
+			error.message = "Well, this is strange. There's no page here... Hmmm....";
+			error.name    = "Page not found";
+			error.status  = 404;
+			next(error);
+
+		}
+		else
+		{
+
+			// Next!
+			next();
+
+		}
+
+	}
+
 
 	/**
 	 * Get dynamic filters to insert into index page
@@ -67,6 +98,12 @@ module.exports = function(application, config)
 	 */
 	function indexGetRoute(req, res, next)
 	{
+
+		// Reset the session if the page number is unspecified
+		if (req.params.page === undefined)
+		{
+			req.session.filters = false;
+		}
 
 		// I'm checking for a page number
 		let pageNum = req.params.page || 1;

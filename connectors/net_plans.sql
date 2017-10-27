@@ -16,9 +16,12 @@ CREATE TABLE net_plans (
 
 ALTER TABLE net_plans
 ADD COLUMN price_model varchar(20);
-
 UPDATE net_plans SET price_model='per month';
 UPDATE net_plans SET price_model='per year' WHERE plan = 'Fiber Plus' OR plan = 'Fiber Pro' OR plan = 'Fiber One';
+
+ALTER TABLE net_plans
+ALTER COLUMN download TYPE INT USING REPLACE(download, 'mbps', '')::NUMERIC,
+ALTER COLUMN upload TYPE INT USING REPLACE(upload, 'mbps', '')::NUMERIC;
 
 INSERT INTO net_plans (provider, provider_logo,plan,download,upload,connection_type,price,link,date_added,date_modified,active) VALUES
 ('Ezecom', 'uploads/ezecom.png', 'EZECOM Corporate 1mbps', '1mbps', '1mbps', 'ADSL', 40.00, 'monthly', 'https://www.ezecom.com.kh/our-services', now()::timestamptz(0), now()::timestamptz(0), true),

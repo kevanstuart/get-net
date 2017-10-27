@@ -22,11 +22,12 @@ const configDir = dir + 'config/' + environment + '/';
 /**
  * Module / File requires
  * 1. Configuration File
- * 2. Compression
- * 3. Body-Parser
- * 3. Express
- * 4. UUID
- * 5. ECT
+ * 2. Metatags
+ * 3. Compression
+ * 4. Body-Parser
+ * 5. Express
+ * 6. UUID
+ * 7. ECT
  */
 const config      = require(configDir + 'config.json');
 const compression = require('compression');
@@ -56,9 +57,7 @@ var renderer = ect({
 /**
  * Configure Compression Engine
  */
-var compress = compression({
-    threshold: 0
-});
+var compress = compression({ threshold: 0 });
 
 
 /**
@@ -68,18 +67,29 @@ var application = express();
 
 
 /**
- * Configuration for Application
+ * Configuration for ECT rendering
  */
 application.engine('ect', renderer.render);
-
-application.set('port', process.env.PORT || config.settings.port);
 application.set('view engine', 'ect');
 
+
+/**
+ * Set caching for static files at 1 week
+ */
 application.use(express.static(config.settings.statics, { maxage:'1w' }));
+
+
+/**
+ * Set body-parser and compression
+ */
 application.use(parser.urlencoded({ extended: true }));
 application.use(parser.json());
 application.use(compress);
 
+
+/**
+ * Setup session store
+ */
 application.use(session({
     store : new memstore({ checkPeriod: 86400000 }),
     secret: 'whichisp_kevanstuart_7100',
@@ -98,8 +108,23 @@ require('./routes/api')(application, config);
 
 
 /**
+ * Default error handler
+ */
+application.use(function(err, req, res, next) 
+{
+
+    // Render error pages
+	//console.error(err);
+	res.status(err.status || 500);
+	res.render('error', { error: err });
+
+});
+
+
+/**
  * Start App && Listen to Port
  */
+application.set('port', process.env.PORT || config.settings.port);
 application.listen(application.get('port'), listenResult);
 function listenResult()
 {

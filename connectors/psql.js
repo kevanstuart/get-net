@@ -49,20 +49,23 @@ module.exports =
 
             // Create queries
             let filterQueries = {
+                types    : buildFilterQuery("connection_type"),
                 downloads: buildFilterQuery("download"),
                 providers: buildFilterQuery("provider"),
-                types    : buildFilterQuery("connection_type"),
+                prices   : buildFilterQuery("price")
             };
             
             // Process queries
             let providers = await client.query(filterQueries.providers);
             let downloads = await client.query(filterQueries.downloads);
+            let prices    = await client.query(filterQueries.prices);
             let types     = await client.query(filterQueries.types);
             
             // Return data
             return {
                 providerList: providers.rows,
                 downloadList: downloads.rows,
+                pricesList  : prices.rows,
                 typesList   : types.rows
             }
 
@@ -137,7 +140,9 @@ function buildFilterQuery(filter)
 {
 
     // Setting a base query
+    //let base = "SELECT distinct(filter) FROM net_plans WHERE active=true ORDER BY filter ASC";
     let base = "SELECT distinct(filter) FROM net_plans WHERE active=true ORDER BY filter ASC";
+    
 
     // Basic check that the filter exists
     if (["download", "provider", "connection_type"].includes(filter))
@@ -145,6 +150,14 @@ function buildFilterQuery(filter)
 
         // Replace placeholder with provided filter variable
         return base.replace(/filter/gi, filter);
+
+    }
+
+    // Price filter needs a different query
+    if (filter === 'price')
+    {
+
+        return "SELECT MAX(price) AS max FROM net_plans WHERE active= true";
 
     }
 
@@ -161,7 +174,7 @@ function buildQuery(limit = false, offset = false, filters = false, sort = false
 
     // Basic query format
     let query = "SELECT plan_id, provider_logo, provider, plan, download, upload, connection_type, "
-                + "price, link FROM net_plans WHERE active = true";
+                + "price, link, price_model FROM net_plans WHERE active = true";
 
     // Add any filters
     if (filters)

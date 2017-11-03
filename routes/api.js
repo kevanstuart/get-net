@@ -16,13 +16,13 @@ const cors = require('cors');
 /**
  * Filters to check POST data against
  */
-var filtersToCheck = ['max_price', 'min_download', 'provider', 'connection_type'];
+var filtersToCheck = ['max_price', 'min_speed', 'provider', 'connection_type'];
 
 
 /**
  * Sort Criteria to check POSt data against
  */
-var sortByToCheck  = ['download', 'upload', 'price'];
+var sortByToCheck  = ['speed', 'upload', 'price'];
 
 
 /**
@@ -45,7 +45,7 @@ module.exports = function(application, config)
 	/**
 	 * Create a new pool
 	 */
-	pSql.createPool(config.db);
+	pSql.createPool(config);
 
 	/**
 	 * Setting API Route URL's && Callbacks
@@ -60,7 +60,7 @@ module.exports = function(application, config)
     {
 
     	// Set limit parameter
-		let dbLimit  = config.settings.page_limit;
+		let dbLimit  = config.data.page_limit;
 
 		// Set offset parameter
 		let dbOffset = (req.body.page -1) * dbLimit;
@@ -73,7 +73,7 @@ module.exports = function(application, config)
 		if (req.body.filters != "false")
 		{
 
-			dbFilters = getDbFilters(req.body.filters);
+			dbFilters = getDbFilters(req.body.filters, config.data);
 			dbSortBy  = getDbSort(req.body.filters);
 
 		}
@@ -128,8 +128,8 @@ module.exports = function(application, config)
     		let toReturn = {
     			types    : data.typesList.map(val => val.connection_type),
     			providers: data.providerList.map(val => val.provider),
-    			downloads: data.downloadList.map(val => val.download),
-    			prices   : [0, data.pricesList[0].max],
+    			speeds   : data.speedsList.map(val => val.speed),
+    			prices   : [0, config.data.max_price],
     			sort     : sort
     		};
 
@@ -155,10 +155,10 @@ function getSortData()
 
 	// Return data
 	return {
-		default: "Default",
-		download_desc: "Fastest Download Speed",
-		upload_desc: "Fastest Upload Speed",
-		price_asc: "Price (Low to High)",
+		default   : "Default",
+		speed_desc: "Fastest Speed First",
+		speed_asc : "Slowest Speed First",
+		price_asc : "Price (Low to High)",
 		price_desc: "Price (High to Low)"
 	};
 
@@ -168,7 +168,7 @@ function getSortData()
 /**
  * Get filters for the Database Query
  */
-function getDbFilters(post)
+function getDbFilters(post, config)
 {
 
 	// New filters array
@@ -186,6 +186,12 @@ function getDbFilters(post)
 
 		// If filter is set to "All", move on
 		if (post[item] == "All" || post[item] == 0)
+		{
+			continue;
+		}
+
+		// Check max_price filter is set to "All" ( > max price config )
+		if (item == "max_price" && post[item] == config.max_price)
 		{
 			continue;
 		}

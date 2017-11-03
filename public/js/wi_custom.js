@@ -17,16 +17,17 @@ function basicSliderSetup()
     var sliderOptions = {
         force_edges:true,
         max_postfix:"+",
+        
         grid:true
     };
 
     // Init sliders
-    $("#min_download").ionRangeSlider( sliderOptions );
+    $("#min_speed").ionRangeSlider( sliderOptions );
     $("#max_price").ionRangeSlider( sliderOptions );
 
     // Custom configuration
-    var minDownload = $("#min_download").data("ionRangeSlider");
-    minDownload.update({ grid_snap: true, postfix: 'mbps' });
+    var minSpeed = $("#min_speed").data("ionRangeSlider");
+    minSpeed.update({ grid_snap:true,postfix: 'mbps' });
 
     // Custom configuration
     var maxPrice = $("#max_price").data("ionRangeSlider");

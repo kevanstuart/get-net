@@ -1,16 +1,20 @@
 {
+    "environment": "development",
 	"settings": {
-        "page_limit" : 10,
         "statics"    : "public",
-        "engine"     : "ect",
         "views"      : "views",
+        "engine"     : "ect",
         "port"       : 3000
     },
+    "data": {
+        "max_price"  : 200,
+        "page_limit" : 15
+    },
     "db": {
-    	"password"   : "",
-    	"database"   : "whichisp",
-    	"user"       : "kevanstuart",
-    	"host"       : "localhost"
+        "user"       : "kevanstuart",
+        "database"   : "whichisp",
+        "host"       : "localhost",
+        "password"   : ""
     },
     "email": {
         "apikey"     : "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",

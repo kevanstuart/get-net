@@ -162,6 +162,9 @@ module.exports = function(application, config)
 			let appData = JSON.parse(data);
 			appData.filters = res.locals.filters;
 
+			// Add base url to appData
+			appData.base_url = config.baseUrl;
+
 			// Assign filter post to session if filtering exists
 			if (appData.post)
 			{

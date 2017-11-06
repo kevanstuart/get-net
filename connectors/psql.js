@@ -7,6 +7,12 @@
 
 
 /**
+ * Require url library?
+ */
+var url = require('url');
+
+
+/**
  * Require Node Postgres Pooling
  */
 const pgPool = require('pg').Pool;

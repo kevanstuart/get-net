@@ -52,8 +52,6 @@ module.exports =
         // Create DB Pool
         pool = new pgPool(dbSettings);
 
-        console.log(pool);
-
     },
 
     /**
@@ -74,6 +72,8 @@ module.exports =
                 speeds   : buildFilterQuery("speed"),
                 //prices   : buildFilterQuery("price")
             };
+
+            console.log(filterQueries);
             
             // Process queries
             let providers = await client.query(filterQueries.providers);

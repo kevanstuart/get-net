@@ -49,11 +49,10 @@ module.exports =
             };
 
         }
-
-        console.log(dbSettings);
-        
         // Create DB Pool
         pool = new pgPool(dbSettings);
+
+        console.log(pool);
 
     },
 

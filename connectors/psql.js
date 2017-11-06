@@ -76,16 +76,15 @@ module.exports =
             // Process queries
             let providers = await client.query(filterQueries.providers);
             let speeds    = await client.query(filterQueries.speeds);
-            //let prices    = await client.query(filterQueries.prices);
             let types     = await client.query(filterQueries.types);
 
-            console.log(providers);
+            //let prices    = await client.query(filterQueries.prices);
+            //pricesList  : prices.rows,
             
             // Return data
             return {
                 providerList: providers.rows,
                 speedsList  : speeds.rows,
-                //pricesList  : prices.rows,
                 typesList   : types.rows
             }
 

@@ -37,7 +37,7 @@ module.exports =
         if (config.environment == "production")
         {
 
-            let params = urlLib.parse(process.env.DATABASE_URL);
+            let params = url.parse(process.env.DATABASE_URL);
             let auth   = params.auth.split(':');
 
             dbSettings = {

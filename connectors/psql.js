@@ -6,6 +6,9 @@
  */
 
 
+const urlLib = require('url');
+
+
 /**
  * Require Node Postgres Pooling
  */
@@ -34,7 +37,7 @@ module.exports =
         if (config.environment == "production")
         {
 
-            let params = url.parse(process.env.DATABASE_URL);
+            let params = urlLib.parse(process.env.DATABASE_URL);
             let auth   = params.auth.split(':');
 
             dbSettings = {

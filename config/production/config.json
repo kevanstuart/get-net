@@ -1,22 +1,26 @@
 {
+    "environment": "production",
     "settings": {
-        "page_limit" : 15,
         "statics"    : "public",
-        "engine"     : "ect",
         "views"      : "views",
+        "engine"     : "ect",
         "port"       : 3000
     },
+    "data": {
+        "max_price"  : 200,
+        "page_limit" : 15
+    },
     "db": {
-        "password"   : "c22f0313925246f7d48977fa3fb6c2e3764b7e2fe1f42ee0420c2e2d21d34744",
-        "database"   : "d58d0vlqepgnoc",
-        "user"       : "anxzvxoqpzuerp",
-        "host"       : "ec2-54-235-102-25.compute-1.amazonaws.com"
+        "user"       : "",
+        "database"   : "",
+        "host"       : "",
+        "password"   : ""
     },
     "email": {
         "apikey"     : "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",
         "sendTo"     : "kevan.jedi@gmail.com"
     },
-    "baseUrl"        : "https://whichisp.herokuapp.com",
+    "baseUrl"        : "http://getwebkh.com",
     "plansPath"      : "/api/getplans",
     "filtersPath"    : "/api/getfilters"
 }

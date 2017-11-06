@@ -114,7 +114,6 @@ application.use(function(err, req, res, next)
 {
 
     // Render error pages
-	//console.error(err);
 	res.status(err.status || 500);
 	res.render('error', { error: err });
 

@@ -27,8 +27,25 @@ module.exports =
     /**
      * Create a new pool
      */
-    createPool: function(dbSettings)
+    createPool: function(config)
     {
+
+        let dbSettings = config.db;
+        if (config.environment == "production")
+        {
+
+            let params = url.parse(process.env.DATABASE_URL);
+            let auth   = params.auth.split(':');
+
+            dbSettings = {
+                "database": params.pathname.split('/')[1],
+                "host"    : params.hostname,
+                "port"    : params.port,
+                "password": auth[1],
+                "user"    : auth[0]
+            };
+
+        }
 
         // Create DB Pool
         pool = new pgPool(dbSettings);
@@ -37,7 +54,6 @@ module.exports =
 
     /**
      * Get the filters
-     * @return {[type]} [description]
      */
     getFilters: async function()
     {
@@ -50,22 +66,22 @@ module.exports =
             // Create queries
             let filterQueries = {
                 types    : buildFilterQuery("connection_type"),
-                downloads: buildFilterQuery("download"),
                 providers: buildFilterQuery("provider"),
-                prices   : buildFilterQuery("price")
+                speeds   : buildFilterQuery("speed"),
+                //prices   : buildFilterQuery("price")
             };
             
             // Process queries
             let providers = await client.query(filterQueries.providers);
-            let downloads = await client.query(filterQueries.downloads);
-            let prices    = await client.query(filterQueries.prices);
+            let speeds    = await client.query(filterQueries.speeds);
+            //let prices    = await client.query(filterQueries.prices);
             let types     = await client.query(filterQueries.types);
             
             // Return data
             return {
                 providerList: providers.rows,
-                downloadList: downloads.rows,
-                pricesList  : prices.rows,
+                speedsList  : speeds.rows,
+                //pricesList  : prices.rows,
                 typesList   : types.rows
             }
 
@@ -77,7 +93,7 @@ module.exports =
             console.log(error);
 
             // Return null
-            return null;
+            return false;
 
         }
         finally
@@ -117,8 +133,8 @@ module.exports =
             // Catch Errors
             console.log(error);
 
-            // Return null
-            return null;
+            // Return false
+            return false;
 
         }
         finally
@@ -141,11 +157,11 @@ function buildFilterQuery(filter)
 
     // Setting a base query
     //let base = "SELECT distinct(filter) FROM net_plans WHERE active=true ORDER BY filter ASC";
-    let base = "SELECT distinct(filter) FROM net_plans WHERE active=true ORDER BY filter ASC";
+    let base = "SELECT distinct(filter) FROM plans WHERE active=true ORDER BY filter ASC";
     
 
     // Basic check that the filter exists
-    if (["download", "provider", "connection_type"].includes(filter))
+    if (["speed", "provider", "connection_type"].includes(filter))
     {
 
         // Replace placeholder with provided filter variable
@@ -154,12 +170,10 @@ function buildFilterQuery(filter)
     }
 
     // Price filter needs a different query
-    if (filter === 'price')
+    /*if (filter === 'price')
     {
-
-        return "SELECT MAX(price) AS max FROM net_plans WHERE active= true";
-
-    }
+        return "SELECT MAX(price) AS max FROM plans WHERE active= true";
+    }*/
 
     return false;
 
@@ -173,8 +187,7 @@ function buildQuery(limit = false, offset = false, filters = false, sort = false
 {
 
     // Basic query format
-    let query = "SELECT plan_id, provider_logo, provider, plan, download, upload, connection_type, "
-                + "price, link, price_model FROM net_plans WHERE active = true";
+    let query = "SELECT * FROM plans WHERE active = true";
 
     // Add any filters
     if (filters)

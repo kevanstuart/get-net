@@ -38,7 +38,6 @@ module.exports =
         {
             
             let params = urlLib.parse(process.env.DATABASE_URL);
-            //let params = url.parse(process.env.DATABASE_URL);
             let auth   = params.auth.split(':');
 
             dbSettings = {
@@ -51,6 +50,8 @@ module.exports =
 
         }
 
+        console.log(dbSettings);
+        
         // Create DB Pool
         pool = new pgPool(dbSettings);
 

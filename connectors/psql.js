@@ -9,7 +9,7 @@
 /**
  * Require url library?
  */
-var url = require('url');
+const urlLib = require('url');
 
 
 /**
@@ -40,7 +40,7 @@ module.exports =
         if (config.environment == "production")
         {
 
-            let params = url.parse(process.env.DATABASE_URL);
+            let params = urlLib.parse(process.env.DATABASE_URL);
             let auth   = params.auth.split(':');
 
             dbSettings = {

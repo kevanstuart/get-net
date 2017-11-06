@@ -72,14 +72,14 @@ module.exports =
                 speeds   : buildFilterQuery("speed"),
                 //prices   : buildFilterQuery("price")
             };
-
-            console.log(filterQueries);
             
             // Process queries
             let providers = await client.query(filterQueries.providers);
             let speeds    = await client.query(filterQueries.speeds);
             //let prices    = await client.query(filterQueries.prices);
             let types     = await client.query(filterQueries.types);
+
+            console.log(providers);
             
             // Return data
             return {

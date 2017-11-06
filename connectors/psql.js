@@ -33,6 +33,8 @@ module.exports =
     createPool: function(config)
     {
 
+        console.log(urlLib);
+
         let dbSettings = config.db;
         if (config.environment == "production")
         {

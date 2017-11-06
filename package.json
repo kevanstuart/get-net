@@ -21,8 +21,7 @@
     "memorystore": "^1.6.0",
     "pg": "^7.3.0",
     "request": "^2.83.0",
-    "sendgrid": "^5.2.3",
-    "url": "^0.11.0"
+    "sendgrid": "^5.2.3"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

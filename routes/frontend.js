@@ -76,15 +76,19 @@ module.exports = function(application, config)
 
 		// Set Filters URL
 		let options = { 
-			url: config.baseUrl + config.filtersPath
+			url : config.baseUrl + config.filtersPath
+			/*,
+			json: true*/
 		};
 
     	// Get Filters from API URL
 		request(options, function(error, response, data) 
 		{
 
+			console.log(typeof data);
+
 			// Add filters to request
-			res.locals.filters = JSON.parse(data.toString());
+			res.locals.filters = JSON.parse(data);
 			
 			// Next
 			next();

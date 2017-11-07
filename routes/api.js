@@ -124,8 +124,6 @@ module.exports = function(application, config)
     	result.then(function(data) 
     	{
 
-    		console.log(data);
-
     		// Format return
     		let toReturn = {
     			types    : data.typesList.map(val => val.connection_type),
@@ -134,6 +132,8 @@ module.exports = function(application, config)
     			prices   : [0, config.data.max_price],
     			sort     : sort
     		};
+
+    		console.log(toReturn);
 
     		// Add "ALL" to certain filters
     		toReturn.providers.unshift("All");

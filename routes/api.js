@@ -50,7 +50,7 @@ module.exports = function(application, config)
 	/**
 	 * Setting API Route URL's && Callbacks
 	 */
-	application.post('/api/getplans', /*cors(corsOptions),*/ plansPostRoute);
+	application.get('/api/getplans', /*cors(corsOptions),*/ plansPostRoute);
 	application.get('/api/getfilters', /*cors(corsOptions),*/ filtersGetRoute);
 
 	/**
@@ -59,7 +59,7 @@ module.exports = function(application, config)
     function plansPostRoute(req, res, next) 
     {
 
-    	console.log("::");
+    	// console.log("::");
     	/*// Set limit parameter
 		let dbLimit  = config.data.page_limit;
 

@@ -158,7 +158,7 @@ module.exports = function(application, config)
 		request(res.locals.options, function(error, response, data) 
 		{
 
-			// Assign data and add filters
+			/*// Assign data and add filters
 			let appData = JSON.parse(data);
 			appData.filters = res.locals.filters;
 
@@ -172,9 +172,11 @@ module.exports = function(application, config)
 			}
 
 			// Render the index page
-			res.render('index', appData);
+			res.render('index', appData);*/
 
 		});
+
+		res.render('index');
 
 	}
 

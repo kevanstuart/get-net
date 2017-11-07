@@ -123,6 +123,8 @@ module.exports =
             // Create query
             let query = buildQuery(limit, offset, filters, sort);
 
+            console.log(query);
+
             // Execute query
             let result = await client.query(query);
 

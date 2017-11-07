@@ -83,10 +83,8 @@ module.exports = function(application, config)
 		request(options, function(error, response, data) 
 		{
 
-			console.log(data);
-
 			// Add filters to request
-			res.locals.filters = data //JSON.parse(data);
+			res.locals.filters = JSON.parse(data.toString());
 			
 			// Next
 			next();
@@ -161,7 +159,7 @@ module.exports = function(application, config)
 		{
 
 			// Assign data and add filters
-			let appData = data //JSON.parse(data);
+			let appData = JSON.parse(data.toString());
 			appData.filters = res.locals.filters;
 
 			// Add base url to appData

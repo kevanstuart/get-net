@@ -113,9 +113,8 @@ module.exports = function(application, config)
 
 		// Options to pass to request
 		res.locals.options = {
-			headers: {'content-type' : 'application/x-www-form-urlencoded'},
-			form   : { page: pageNum, filters: filters},
-			url    : config.baseUrl + config.plansPath
+			form : { page: pageNum, filters: filters},
+			url  : config.baseUrl + config.plansPath
 		};
 
 		// Because
@@ -137,9 +136,8 @@ module.exports = function(application, config)
 
 		// Configure parameters
 		res.locals.options = {
-			headers: {'content-type' : 'application/x-www-form-urlencoded'},
-			form   : { page: pageNum, filters: filters},
-			url    : config.baseUrl + config.plansPath
+			form : { page: pageNum, filters: filters},
+			url  : config.baseUrl + config.plansPath
 		};
 
 		// Because
@@ -153,6 +151,8 @@ module.exports = function(application, config)
 	 */
 	function indexPageRoute(req, res, next)
 	{
+
+		console.log(request);
 
 		// Send request to the URL && handle response
 		request.post(res.locals.options, function(error, response, data) 

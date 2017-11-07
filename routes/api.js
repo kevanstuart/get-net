@@ -140,7 +140,7 @@ module.exports = function(application, config)
     		toReturn.types.unshift("All");*/
 
     		// Send results to Frontend
-    		res.json(toReturn);
+    		res.send(toReturn);
     		
     	});
 

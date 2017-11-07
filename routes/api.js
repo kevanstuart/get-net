@@ -36,11 +36,11 @@ module.exports = function(application, config)
 	/**
 	 * Enable CORS options
 	 */
-	let corsOptions = {
+	/*let corsOptions = {
   		optionsSuccessStatus: 200,
   		origin: config.baseUrl,
   		methods:'GET, POST'
-	}
+	}*/
 
 	/**
 	 * Create a new pool
@@ -50,8 +50,8 @@ module.exports = function(application, config)
 	/**
 	 * Setting API Route URL's && Callbacks
 	 */
-	application.post('/api/getplans', cors(corsOptions), plansPostRoute);
-	application.get('/api/getfilters', cors(corsOptions), filtersGetRoute);
+	application.post('/api/getplans', /*cors(corsOptions),*/ plansPostRoute);
+	application.get('/api/getfilters', /*cors(corsOptions),*/ filtersGetRoute);
 
 	/**
 	 * Set data endpoint to take POST data and return JSON to the frontend

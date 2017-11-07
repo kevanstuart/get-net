@@ -155,7 +155,7 @@ module.exports = function(application, config)
 	{
 
 		// Send request to the URL && handle response
-		request,post(res.locals.options, function(error, response, data) 
+		request.post(res.locals.options, function(error, response, data) 
 		{
 
 			console.log(data.length);

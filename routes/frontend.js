@@ -86,7 +86,7 @@ module.exports = function(application, config)
 			console.log(data);
 
 			// Add filters to request
-			res.locals.filters = JSON.parse(data);
+			res.locals.filters = data //JSON.parse(data);
 			
 			// Next
 			next();

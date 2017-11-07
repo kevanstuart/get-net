@@ -59,6 +59,8 @@ module.exports = function(application, config)
     function plansPostRoute(req, res, next) 
     {
 
+    	console.log("hey");
+
     	// Set limit parameter
 		let dbLimit  = config.data.page_limit;
 

@@ -85,7 +85,7 @@ module.exports = function(application, config)
 		request(options, function(error, response, data) 
 		{
 
-			console.log(typeof data);
+			console.log(data);
 
 			// Add filters to request
 			res.locals.filters = JSON.parse(data);

@@ -120,12 +120,11 @@ module.exports = function(application, config)
     	// Get filters results
     	let result = pSql.getFilters();
 
-    	console.log(sort);
-    	console.log(result);
-
     	// Process promise result
     	result.then(function(data) 
     	{
+
+    		console.log(data);
 
     		// Format return
     		let toReturn = {

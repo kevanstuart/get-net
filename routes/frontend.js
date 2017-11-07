@@ -159,7 +159,7 @@ module.exports = function(application, config)
 		{
 
 			console.log(typeof data);
-			console.log(data);
+			console.log(data.length);
 
 			// Assign data and add filters
 			let appData = JSON.parse(data);

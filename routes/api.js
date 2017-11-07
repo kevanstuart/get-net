@@ -133,14 +133,12 @@ module.exports = function(application, config)
     			sort     : sort
     		};
 
-    		console.log(toReturn);
-
     		// Add "ALL" to certain filters
     		/*toReturn.providers.unshift("All");
     		toReturn.types.unshift("All");*/
 
     		// Send results to Frontend
-    		res.send(toReturn);
+    		res.json(toReturn);
     		
     	});
 

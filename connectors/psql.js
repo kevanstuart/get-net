@@ -69,7 +69,7 @@ module.exports =
             let filterQueries = {
                 types    : buildFilterQuery("connection_type"),
                 providers: buildFilterQuery("provider"),
-                speeds   : buildFilterQuery("speed"),
+                speeds   : buildFilterQuery("speed")
                 //prices   : buildFilterQuery("price")
             };
             

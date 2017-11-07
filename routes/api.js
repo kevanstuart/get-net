@@ -114,8 +114,6 @@ module.exports = function(application, config)
     function filtersGetRoute(req, res, next) 
     {
 
-    	console.log(pSql);
-
     	// Get sort list
     	let sort = getSortData();
 

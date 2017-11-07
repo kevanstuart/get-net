@@ -158,8 +158,7 @@ module.exports = function(application, config)
 		request(res.locals.options, function(error, response, data) 
 		{
 
-			console.log(error);
-			//console.log(response);
+			console.log(data.length);
 
 			/*// Assign data and add filters
 			let appData = JSON.parse(data);

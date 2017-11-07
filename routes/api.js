@@ -136,8 +136,8 @@ module.exports = function(application, config)
     		console.log(toReturn);
 
     		// Add "ALL" to certain filters
-    		toReturn.providers.unshift("All");
-    		toReturn.types.unshift("All");
+    		/*toReturn.providers.unshift("All");
+    		toReturn.types.unshift("All");*/
 
     		// Send results to Frontend
     		res.json(toReturn);

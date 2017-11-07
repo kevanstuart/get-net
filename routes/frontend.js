@@ -79,11 +79,11 @@ module.exports = function(application, config)
 			url: config.baseUrl + config.filtersPath
 		};
 
-		console.log(options);
-
     	// Get Filters from API URL
 		request(options, function(error, response, data) 
 		{
+
+			console.log(data);
 
 			// Add filters to request
 			res.locals.filters = JSON.parse(data);

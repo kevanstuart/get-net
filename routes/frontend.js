@@ -113,9 +113,9 @@ module.exports = function(application, config)
 
 		// Options to pass to request
 		res.locals.options = {
-			url   : config.baseUrl + config.plansPath,
-			form  : { page: pageNum, filters: filters},
-			method: "POST"
+			headers: {'content-type' : 'application/x-www-form-urlencoded'},
+			form   : { page: pageNum, filters: filters},
+			url    : config.baseUrl + config.plansPath
 		};
 
 		// Because
@@ -137,9 +137,9 @@ module.exports = function(application, config)
 
 		// Configure parameters
 		res.locals.options = {
-			url   : config.baseUrl + config.plansPath,
-			form  : { page: pageNum, filters: filters},
-			method: "POST"
+			headers: {'content-type' : 'application/x-www-form-urlencoded'},
+			form   : { page: pageNum, filters: filters},
+			url    : config.baseUrl + config.plansPath
 		};
 
 		// Because
@@ -155,7 +155,7 @@ module.exports = function(application, config)
 	{
 
 		// Send request to the URL && handle response
-		request(res.locals.options, function(error, response, data) 
+		request,post(res.locals.options, function(error, response, data) 
 		{
 
 			console.log(data.length);

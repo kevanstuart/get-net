@@ -154,12 +154,11 @@ module.exports = function(application, config)
 	function indexPageRoute(req, res, next)
 	{
 
+		console.log(res.locals.options);
+
 		// Send request to the URL && handle response
 		request(res.locals.options, function(error, response, data) 
 		{
-
-			console.log(typeof data);
-			console.log(data.length);
 
 			// Assign data and add filters
 			let appData = JSON.parse(data);

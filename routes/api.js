@@ -59,7 +59,8 @@ module.exports = function(application, config)
     function plansPostRoute(req, res, next) 
     {
 
-    	// Set limit parameter
+    	console.log("::");
+    	/*// Set limit parameter
 		let dbLimit  = config.data.page_limit;
 
 		// Set offset parameter
@@ -104,7 +105,9 @@ module.exports = function(application, config)
     		// Send results to Frontend
     		res.json(toReturn);
 
-    	});
+    	});*/
+
+    	res.json({post:"hey"});
     	
     }
 

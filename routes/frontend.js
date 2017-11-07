@@ -159,8 +159,8 @@ module.exports = function(application, config)
 		{
 
 			console.log(error);
-			console.log(response);
-			
+			//console.log(response);
+
 			/*// Assign data and add filters
 			let appData = JSON.parse(data);
 			appData.filters = res.locals.filters;

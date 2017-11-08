@@ -62,9 +62,7 @@ module.exports = function(application, config)
     	// Set limit parameter
 		let dbLimit  = config.data.page_limit;
 
-		console.log(dbLimit);
-
-		/*// Set offset parameter
+		// Set offset parameter
 		let dbOffset = (req.body.page -1) * dbLimit;
 
 		// We need to set these as default
@@ -83,7 +81,8 @@ module.exports = function(application, config)
     	// Get filtered results
     	let result = pSql.getPlans(dbLimit + 1, dbOffset, dbFilters, dbSortBy);
 
-    	// Process promise result
+    	console.log(result);
+    	/*// Process promise result
     	result.then(function (data) 
     	{
 

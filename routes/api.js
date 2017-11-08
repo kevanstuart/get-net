@@ -81,8 +81,7 @@ module.exports = function(application, config)
     	// Get filtered results
     	let result = pSql.getPlans(dbLimit + 1, dbOffset, dbFilters, dbSortBy);
 
-    	console.log(result);
-    	/*// Process promise result
+    	// Process promise result
     	result.then(function (data) 
     	{
 
@@ -105,9 +104,7 @@ module.exports = function(application, config)
     		// Send results to Frontend
     		res.json(toReturn);
 
-    	});*/
-
-    	res.json({ post:"hey" });
+    	});
     	
     }
 

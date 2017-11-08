@@ -113,7 +113,7 @@ module.exports = function(application, config)
 
 		// Options to pass to request
 		res.locals.options = {
-			form : { page: pageNum, filters: filters},
+			form : { page: pageNum, filters: filters },
 			url  : config.baseUrl + config.plansPath
 		};
 
@@ -136,7 +136,7 @@ module.exports = function(application, config)
 
 		// Configure parameters
 		res.locals.options = {
-			form : { page: pageNum, filters: filters},
+			form : { page: pageNum, filters: filters },
 			url  : config.baseUrl + config.plansPath
 		};
 
@@ -152,13 +152,13 @@ module.exports = function(application, config)
 	function indexPageRoute(req, res, next)
 	{
 
-		console.log(request);
+		//console.log(res.locals.options);
 
 		// Send request to the URL && handle response
 		request.post(res.locals.options, function(error, response, data) 
 		{
 
-			console.log(data.length);
+			console.log(response);
 
 			/*// Assign data and add filters
 			let appData = JSON.parse(data);

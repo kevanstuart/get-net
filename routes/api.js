@@ -50,7 +50,7 @@ module.exports = function(application, config)
 	/**
 	 * Setting API Route URL's && Callbacks
 	 */
-	application.get('/api/getplans', /*cors(corsOptions),*/ plansPostRoute);
+	application.post('/api/getplans', /*cors(corsOptions),*/ plansPostRoute);
 	application.get('/api/getfilters', /*cors(corsOptions),*/ filtersGetRoute);
 
 	/**

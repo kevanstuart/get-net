@@ -158,10 +158,8 @@ module.exports = function(application, config)
 		request.post(res.locals.options, function(error, response, data) 
 		{
 
-			console.log(data);
-
-			/*// Assign data and add filters
-			let appData = JSON.parse(data);
+			// Assign data and add filters
+			let appData = (data.length > 0) : JSON.parse(data) ? {};
 			appData.filters = res.locals.filters;
 
 			// Add base url to appData
@@ -174,11 +172,9 @@ module.exports = function(application, config)
 			}
 
 			// Render the index page
-			res.render('index', appData);*/
+			res.render('index', appData);
 
 		});
-
-		res.render('index');
 
 	}
 

@@ -9,6 +9,7 @@
 				<th>Provider</th>
 				<th>Plan</th>
 				<th>Speed</th>
+				<th>Data Cap</th>
 				<th>Connection Type</th>
 				<th class="text-right">Price</th>
 				<th></th>
@@ -27,6 +28,15 @@
 				</td>
 				<td class="align-middle"><%= plan.plan_name %></td>
 				<td class="align-middle"><%= plan.speed %>mbps</td>
+
+				<td class="align-middle">
+					<% if (plan.data_cap) : %>
+						<%= if plan.data_cap > 1024 then plan.data_cap / 1024 + "Gb" else plan.data_cap + "Mb"%>
+					<% else : %>
+					Unlimited
+					<% end %>
+				</td>
+
 				<td class="align-middle"><%= plan.connection_type %></td>
 				<td class="align-middle text-right">$<%= plan.price %></td>
 				<td class="text-center">
@@ -37,7 +47,13 @@
 		<tbody>
 	</table>
 <% else : %>
-	There seem to be no results for your selection...
+	<table class="table table-bordered table-responsive m-0">
+		<tbody>
+			<tr>
+				<td class="align-middle">There seem to be no results for your selection...</td>
+			</tr>
+		</tbody>
+	</table>
 <% end %>
 </div>
 

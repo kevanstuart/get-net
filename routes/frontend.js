@@ -159,7 +159,7 @@ module.exports = function(application, config)
 		{
 
 			// Assign data and add filters
-			let appData = (data.length > 0) : JSON.parse(data) ? {};
+			let appData = (data.length > 0) ? JSON.parse(data) : {};
 			appData.filters = res.locals.filters;
 
 			// Add base url to appData

@@ -59,11 +59,12 @@ module.exports = function(application, config)
     function plansPostRoute(req, res, next) 
     {
 
-    	// console.log("::");
-    	/*// Set limit parameter
+    	// Set limit parameter
 		let dbLimit  = config.data.page_limit;
 
-		// Set offset parameter
+		console.log(dbLimit);
+
+		/*// Set offset parameter
 		let dbOffset = (req.body.page -1) * dbLimit;
 
 		// We need to set these as default

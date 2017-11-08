@@ -107,7 +107,7 @@ module.exports = function(application, config)
 
     	});*/
 
-    	res.json({post:"hey"});
+    	res.json({ post:"hey" });
     	
     }
 

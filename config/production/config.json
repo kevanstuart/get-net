@@ -20,7 +20,7 @@
         "apikey"     : "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",
         "sendTo"     : "kevan.jedi@gmail.com"
     },
-    "baseUrl"        : "http://getwebkh.com",
+    "baseUrl"        : "http://www.getwebkh.com",
     "plansPath"      : "/api/getplans",
     "filtersPath"    : "/api/getfilters"
 }

@@ -99,6 +99,18 @@ application.use(session({
 
 
 /**
+ * Looks like the best way to handle robots.txt
+ */
+application.get('/robots.txt', function(req, res) 
+{
+
+    res.type('text/plain');
+    res.send("User-agent: *\nDisallow: /api/");
+
+});
+
+
+/**
  * Require route files
  * 1. frontend
  * 2. api

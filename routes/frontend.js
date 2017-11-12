@@ -7,17 +7,25 @@
 
 /**
  * Module Requires
- * 1. Request
- * 2. Sendgrid Mail
+ * 1. Sendgrid Mail
+ * 2. Form Validator
+ * 3. Request
  */
-const request = require('request');
-//const helper  = require('sendgrid').mail;
+const sendgrid  = require('@sendgrid/mail');
+const validator = require('validator');
+const request   = require('request');
 
 
 /**
- * Elements in the contact form
+ * Set the Sendgrid API Key
  */
-var formElements = [ 'name', 'email', 'message' ];
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+
+
+/**
+ * These are the elements in the contact form
+ */
+const contactElements = [ 'name', 'email', 'message' ];
 
 
 /**
@@ -31,12 +39,26 @@ module.exports = function(application, config)
 	/**
 	 * Set Route URL's && Callbacks
 	 */
-	/*application.get('/about', aboutPageRoute);
-	application.get('/contact', contactFormRoute);
-	application.post('/contact', processContactForm, contactFormRoute);*/
 	application.param('page', checkParameter);
-	application.get( '/:page?', getFilters, indexGetRoute,  indexPageRoute);
-	application.post('/:page?', getFilters, indexPostRoute, indexPageRoute);
+	application.get('/contact', contactPage);
+
+	application.post('/contact', 
+		contactPost, 
+		contactMail, 
+		contactPage
+	);
+
+	application.get( '/:page?', 
+		indexFilters, 
+		indexGet,  
+		indexPage
+	);
+	
+	application.post('/:page?', 
+		indexFilters, 
+		indexPost, 
+		indexPage
+	);
 
 
 	/**
@@ -45,33 +67,109 @@ module.exports = function(application, config)
 	function checkParameter(req, res, next, page)
 	{
 
-		// Page needs to be a number or not zero
 		if (isNaN(page) || page == 0)
 		{
-
-			// Create a 404 error
 			let error = new Error();
-			error.message = "Well, this is strange. There's no page here... Hmmm....";
-			error.name    = "Page not found";
-			error.status  = 404;
+			error.status(404);
 			next(error);
-
 		}
-		else
+
+		next();
+
+	}
+
+
+	/**
+	 * Sanitize and Validate Contact Form input
+	 */
+	function contactPost(req, res, next)
+	{
+
+		let inputs = req.body;
+		let errors = [];
+
+		let inputKeys = Object.keys(inputs);
+		inputKeys.map(function(key)
 		{
 
-			// Next!
-			next();
+			inputs[key] = validator.escape(inputs[key]);
+			inputs[key] = validator.trim(inputs[key]);
+
+			if (key === "email")
+			{
+				inputs[key] = validator.normalizeEmail(inputs[key]);
+			}
+
+		});
+
+		inputKeys.map(function(key) 
+		{
+
+			if ((key === "email" && !validator.isEmail(inputs[key])) ||
+				!contactElements.includes(key) || 
+				validator.isEmpty(inputs[key]))
+			{
+				errors.push(key);
+			}
+
+		});
+		
+		res.locals.inputs = inputs;
+		res.locals.errors = errors;
+
+		next();
+
+	}
+
+
+	/**
+	 * Sends an email (duh)
+	 */
+	function contactMail(req, res, next)
+	{
+
+		if (Object.keys(res.locals.errors).length == 0)
+		{
+			
+			let params = res.locals.inputs;
+			let message = {
+				subject: "GetWebKH Contact Form - " + params.name,
+				replyTo: params.name + "<" + params.email + ">",
+				from   : params.name + "<" + params.email + ">",
+				to     : config.email.sendTo,
+				text   : params.message
+			};
+
+			let mailSent = mail.send(message);
+			sent.then(() => {
+				res.locals.sent = true;
+			});
+			sent.catch((error) => {
+				console.error(error.toString());
+				res.locals.sent = false;
+			});
 
 		}
 
+		next();
+
+	}
+
+
+	/**
+	 * Set the contact form page route
+	 */
+	function contactPage(req, res, next)
+	{
+		console.log(res.locals);
+		res.render('contact', res.locals);
 	}
 
 
 	/**
 	 * Get dynamic filters to insert into index page
 	 */
-	function getFilters(req, res, next)
+	function indexFilters(req, res, next)
 	{
 
 		// Set Filters URL
@@ -96,7 +194,7 @@ module.exports = function(application, config)
 	/**
 	 * Set index route on GET
 	 */
-	function indexGetRoute(req, res, next)
+	function indexGet(req, res, next)
 	{
 
 		// Reset the session if the page number is unspecified
@@ -125,7 +223,7 @@ module.exports = function(application, config)
 	/**
 	 * Set index route on POST
 	 */
-	function indexPostRoute(req, res, next)
+	function indexPost(req, res, next)
 	{
 
 		// I'm checking for a page number
@@ -149,7 +247,7 @@ module.exports = function(application, config)
 	/**
 	 * Final index page route for request and rendering
 	 */
-	function indexPageRoute(req, res, next)
+	function indexPage(req, res, next)
 	{
 
 		// Send request to the URL && handle response
@@ -173,39 +271,6 @@ module.exports = function(application, config)
 			res.render('index', appData);
 
 		});
-
-	}
-
-
-	function processContactForm(req, res, next)
-	{
-
-		// Render the form
-		next();
-
-	}
-
-
-	/**
-	 * Set the contact form page route
-	 */
-	function contactFormRoute(req, res, next)
-	{
-
-		// Render the contact page
-		res.render('contact');
-
-	}
-
-
-	/**
-	 * Set the about page route
-	 */
-	function aboutPageRoute(req, res)
-	{
-
-		// Render the about page
-		res.render('about');
 
 	}
 

@@ -26,7 +26,7 @@ let files = {
     minify   : ['./public/css/rangeslider.css', './public/css/rangeslider-skin.css'],
     uglify   : ['./public/js/wi_custom.js'],
     concatjs : ['./public/js/jquery-1.12.3.min.js', './public/js/rangeslider.min.js', 
-                 './public/js/wi_custom.min.js'],
+                './public/js/wi_custom.min.js'],
     concatcss: ['./public/css/bootstrap.min.css', './public/css/bootstrap-reboot.min.css', 
                  './public/css/rangeslider.min.css', './public/css/rangeslider-skin.min.css']
 };

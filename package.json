@@ -1,36 +1,40 @@
 {
-  "name": "which_isp",
-  "version": "0.0.1",
-  "description": "A Kevan Stuart Website",
-  "main": "app.js",
-  "engines": {
-    "node": "8.6.0"
-  },
-  "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Kevan Stuart (kevan.jedi@gmail.com)",
-  "dependencies": {
-    "body-parser": "^1.18.2",
-    "compression": "^1.7.1",
-    "cors": "^2.8.4",
-    "ect": "^0.5.9",
-    "express": "^4.16.0",
-    "express-session": "^1.15.6",
-    "memorystore": "^1.6.0",
-    "pg": "^7.3.0",
-    "request": "^2.83.0",
-    "sendgrid": "^5.2.3"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-cssnano": "^2.1.2",
-    "gulp-notify": "^3.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^3.0.0",
-    "gulp-util": "^3.0.8",
-    "nodemon": "^1.12.1"
-  }
+    "repository": "https://sometimesicode@bitbucket.org/sometimesicode/whichisp.git",
+    "author": "Kevan Stuart (kevan.jedi@gmail.com)",
+    "description": "A Kevan Stuart Website",
+    "licence": "Unlicenced",
+    "name": "which_isp",
+    "main": "app.js",
+    "version": "0.0.1",
+    "private": true,
+    "engines": {
+        "node": "8.6.0"
+    },
+    "scripts": {
+        "start": "node app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "@sendgrid/mail": "^6.1.4",
+        "body-parser": "^1.18.2",
+        "compression": "^1.7.1",
+        "cors": "^2.8.4",
+        "ect": "^0.5.9",
+        "express": "^4.16.0",
+        "express-session": "^1.15.6",
+        "memorystore": "^1.6.0",
+        "pg": "^7.3.0",
+        "request": "^2.83.0",
+        "validator": "^9.1.1"
+    },
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-concat": "^2.6.1",
+        "gulp-cssnano": "^2.1.2",
+        "gulp-notify": "^3.0.0",
+        "gulp-rename": "^1.2.2",
+        "gulp-uglify": "^3.0.0",
+        "gulp-util": "^3.0.8",
+        "nodemon": "^1.12.1"
+    }
 }

@@ -40,8 +40,8 @@ module.exports = function(application, config)
 	 * Set Route URL's && Callbacks
 	 */
 	application.param('page', checkParameter);
-	application.get('/contact', contactPage);
 
+	application.get('/contact', contactPage);
 	application.post('/contact', 
 		contactPost, 
 		contactMail, 

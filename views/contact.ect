@@ -8,13 +8,13 @@
 		really like to know about it.
 	</p>
 
-	<% if @sent : %>
+	<% if @sent == true : %>
 	<div class="alert alert-success mt-4 mb-0" role="alert">
   		Thanks! I'll get back to you as soon as I can.
 	</div>
 	<% end %>
 
-	<% if !@sent : %>
+	<% if @sent == false : %>
 	<div class="alert alert-danger mt-4 mb-0" role="alert">
   		Something went wrong - perhaps you could try again?
 	</div>

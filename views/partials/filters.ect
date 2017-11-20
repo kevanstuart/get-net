@@ -1,4 +1,4 @@
-<form action="<%= @base %>" method="POST" name="ISPCompare" class="container-fluid px-5 py-4">
+<form action="<%= @base %>" method="POST" name="comparison" class="container-fluid px-5 py-4">
     <div class="row">
 
         <!-- Providers Filter -->
@@ -71,9 +71,7 @@
         <div class="col">
             <label for="min_speed">Minimum Speed</label>
             <input name="min_speed" id="min_speed"
-                data-values="<%= @filters.speeds %>" 
-
-
+                data-values="<%= @filters.speeds %>"
                 <% if (@post && (@post.min_speed != @filters.speeds[0])) : %>
                 data-from="<%= @filters.speeds.indexOf(parseInt(@post.min_speed)) %>"
                 <% else : %>
@@ -82,13 +80,11 @@
             />
         </div>
         <% end %>
-
     </div>
 
     <div class="row mt-4">
         <div class="col">
             <button class="btn btn-primary" type="submit">Show Results</button>
-            <!-- <button class="btn btn-dark btn-link" type="reset">Reset filters</button> -->
         </div>
     </div>
 </form>

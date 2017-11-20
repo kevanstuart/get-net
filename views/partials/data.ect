@@ -1,0 +1,44 @@
+<table class="table table-bordered table-responsive m-0">
+	<thead class="bg-dark text-light">
+		<tr>
+			<th>Provider</th>
+			<th>Plan</th>
+			<th>Speed</th>
+			<th>Data Cap</th>
+			<th>Connection Type</th>
+			<th class="text-right">Price</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	<% for plan in @plans : %>
+		<tr>
+			<td class="align-middle">
+				<% if (plan.provider_logo) : %>
+				<img src="http://images.getwebkh.com/<%= plan.provider_logo %>" 
+					 style="height:30px" title="<%= plan.provider %>" />
+				<% else : %>
+				<%= plan.provider %>
+				<% end %>
+			</td>
+			<td class="align-middle"><%= plan.plan_name %></td>
+			<td class="align-middle"><%= plan.speed %>mbps</td>
+
+			<td class="align-middle">
+				<% if (plan.data_cap) : %>
+					<%= if plan.data_cap > 1024 then plan.data_cap / 1024 + "Gb" else plan.data_cap + "Mb"%>
+				<% else : %>
+				Unlimited
+				<% end %>
+			</td>
+
+			<td class="align-middle"><%= plan.connection_type %></td>
+			<td class="align-middle text-right">$<%= plan.price %></td>
+
+			<td class="text-center">
+				<a class="btn btn-primary" href="<%= plan.link %>">View Deal</a>
+			</td>
+		</tr>
+	<% end %>
+	<tbody>
+</table>

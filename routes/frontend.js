@@ -66,7 +66,6 @@ module.exports = function(application, config)
 	 */
 	function checkParameter(req, res, next, page)
 	{
-
 		if (isNaN(page) || page == 0)
 		{
 			let error = new Error();
@@ -75,7 +74,6 @@ module.exports = function(application, config)
 		}
 
 		next();
-
 	}
 
 
@@ -84,7 +82,6 @@ module.exports = function(application, config)
 	 */
 	function contactPost(req, res, next)
 	{
-
 		let inputs = req.body;
 		let errors = [];
 
@@ -118,7 +115,6 @@ module.exports = function(application, config)
 		res.locals.errors = errors;
 
 		next();
-
 	}
 
 
@@ -127,10 +123,8 @@ module.exports = function(application, config)
 	 */
 	function contactMail(req, res, next)
 	{
-
 		if (Object.keys(res.locals.errors).length == 0)
-		{
-			
+		{		
 			let params = res.locals.inputs;
 			let message = {
 				subject: "GetWebKH Contact Form - " + params.name,
@@ -148,11 +142,9 @@ module.exports = function(application, config)
 				console.error(error.toString());
 				res.locals.sent = false;
 			});
-
 		}
 
 		next();
-
 	}
 
 
@@ -171,24 +163,15 @@ module.exports = function(application, config)
 	 */
 	function indexFilters(req, res, next)
 	{
-
-		// Set Filters URL
 		let options = { 
 			url : config.baseUrl + config.filtersPath
 		};
 
-    	// Get Filters from API URL
 		request(options, function(error, response, data) 
 		{
-
-			// Add filters to request
 			res.locals.filters = JSON.parse(data);
-			
-			// Next
 			next();
-
 		});
-
 	}
 
 	/**
@@ -196,28 +179,21 @@ module.exports = function(application, config)
 	 */
 	function indexGet(req, res, next)
 	{
-
 		// Reset the session if the page number is unspecified
 		if (req.params.page === undefined)
 		{
 			req.session.filters = false;
 		}
 
-		// I'm checking for a page number
 		let pageNum = req.params.page || 1;
-
-		// Check whether filters exist in session
 		let filters = req.session.filters || false;
 
-		// Options to pass to request
 		res.locals.options = {
 			form : { page: pageNum, filters: filters },
 			url  : config.baseUrl + config.plansPath
 		};
 
-		// Because
 		next();
-
 	}
 
 	/**
@@ -225,22 +201,15 @@ module.exports = function(application, config)
 	 */
 	function indexPost(req, res, next)
 	{
-
-		// I'm checking for a page number
 		let pageNum = req.params.page || 1;
-
-		// Check whether filters exist in session
 		let filters = req.body || false;
 
-		// Configure parameters
 		res.locals.options = {
 			form : { page: pageNum, filters: filters },
 			url  : config.baseUrl + config.plansPath
 		};
 
-		// Because
 		next();
-
 	}
 
 
@@ -249,29 +218,20 @@ module.exports = function(application, config)
 	 */
 	function indexPage(req, res, next)
 	{
-
-		// Send request to the URL && handle response
 		request.post(res.locals.options, function(error, response, data) 
 		{
-
-			// Assign data and add filters
 			let appData = (data.length > 0) ? JSON.parse(data) : {};
-			appData.filters = res.locals.filters;
-
-			// Add base url to appData
+			appData.filters  = res.locals.filters;
 			appData.base_url = config.baseUrl;
+			appData.img_url  = config.imgUrl;
 
-			// Assign filter post to session if filtering exists
 			if (appData.post)
 			{
 				req.session.filters = appData.post;
 			}
 
-			// Render the index page
 			res.render('index', appData);
-
 		});
-
 	}
 
 }

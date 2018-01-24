@@ -3,7 +3,7 @@
 
 <div class="container-fluid px-5 py-4">
 <% if @plans?.length > 0 : %>
-	<% include 'partials/data', { plans: @plans } %>
+	<% include 'partials/data', { plans: @plans, img: @img_url } %>
 <% else : %>
 	<table class="table table-bordered table-responsive m-0">
 		<tbody>

@@ -21,6 +21,7 @@
         "sendTo"     : "kevan.jedi@gmail.com"
     },
     "baseUrl"        : "http://localhost:3000",
+    "imgUrl"         : "http://localhost:3000/img/uploads",
     "plansPath"      : "/api/getplans",
     "filtersPath"    : "/api/getfilters"
 }

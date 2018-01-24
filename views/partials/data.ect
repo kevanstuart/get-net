@@ -15,7 +15,7 @@
 		<tr>
 			<td class="align-middle">
 				<% if (plan.provider_logo) : %>
-				<img src="http://images.getwebkh.com/<%= plan.provider_logo %>" 
+				<img src="<%= @img %>/<%= plan.provider_logo %>" 
 					 style="height:30px" title="<%= plan.provider %>" />
 				<% else : %>
 				<%= plan.provider %>

@@ -65,54 +65,36 @@ module.exports = function(application, config)
 	 */
     function plansPost(req, res, next) 
     {
-
-    	// Set limit parameter
-		let dbLimit  = config.data.page_limit;
-
-		// Set offset parameter
-		let dbOffset = (req.body.page -1) * dbLimit;
-
-		// We need to set these as default
+		let dbLimit   = config.data.page_limit;
+		let dbOffset  = (req.body.page -1) * dbLimit;
 		let dbFilters = false;
 		let dbSortBy  = false;
 
-		// Change the default if filters exist
 		if (req.body.filters != "false")
 		{
-
 			dbFilters = getDbFilters(req.body.filters, config.data);
 			dbSortBy  = getDbSort(req.body.filters);
-
 		}
 
-    	// Get filtered results
     	let result = pSql.getPlans(dbLimit + 1, dbOffset, dbFilters, dbSortBy);
 
-    	// Process promise result
     	result.then(function (data) 
     	{
 
-    		// Check next set exists
     		let next = (data.rows.length > dbLimit) ? data.rows.pop() : false;
-
-    		// Create return json
     		let toReturn = {
     			page  : req.body.page,
     			plans : data.rows,
     			next  : next
     		};
 
-    		// Add filters if set
     		if (req.body.filters != "false")
 			{
 				toReturn.post = req.body.filters;
 			}
 
-    		// Send results to Frontend
     		res.json(toReturn);
-
     	});
-    	
     }
 
     /**
@@ -120,18 +102,11 @@ module.exports = function(application, config)
      */
     function filtersGet(req, res, next) 
     {
-
-    	// Get sort list
     	let sort = getSortData();
-
-    	// Get filters results
     	let result = pSql.getFilters();
 
-    	// Process promise result
     	result.then(function(data) 
     	{
-
-    		// Format return
     		let toReturn = {
     			types    : data.typesList.map(val => val.connection_type),
     			providers: data.providerList.map(val => val.provider),
@@ -140,15 +115,11 @@ module.exports = function(application, config)
     			sort     : sort
     		};
 
-    		// Add "ALL" to certain filters
     		toReturn.providers.unshift("All");
     		toReturn.types.unshift("All");
 
-    		// Send results to Frontend
-    		res.json(toReturn);
-    		
+    		res.json(toReturn);    		
     	});
-
     }
 
 }
@@ -159,7 +130,6 @@ module.exports = function(application, config)
  */
 function getSortData()
 {
-
 	// Return data
 	return {
 		default   : "Default",
@@ -168,7 +138,6 @@ function getSortData()
 		price_asc : "Price (Low to High)",
 		price_desc: "Price (High to Low)"
 	};
-
 }
 
 
@@ -177,52 +146,37 @@ function getSortData()
  */
 function getDbFilters(post, config)
 {
-
-	// New filters array
 	let filters = new Object();
 
-	// Loop through POST data to get filters
 	for (var item in post)
 	{
-
-		// If filter isn't in the list, move on
 		if (!filtersToCheck.includes(item))
 		{
 			continue;
 		}
 
-		// If filter is set to "All", move on
 		if (post[item] == "All" || post[item] == 0)
 		{
 			continue;
 		}
 
-		// Check max_price filter is set to "All" ( > max price config )
 		if (item == "max_price" && post[item] == config.max_price)
 		{
 			continue;
 		}
 
-		// Min, Max or Equals filter?
 		if (item.includes("max") || item.includes("min"))
 		{
-			
-			// Split and get filter operation
 			let tmpArr = item.split("_");
 			filters[ tmpArr[1] ] = minMaxEqualsFilter(tmpArr[0], post[item]);
-
 		}
 		else
 		{
-
-			// Get filter operation
 			filters[ item ] = minMaxEqualsFilter("equals", post[item])
-
 		}
 
 	}
 
-	// Return filters to use
 	return filters;
 }
 
@@ -233,17 +187,12 @@ function getDbFilters(post, config)
  */
 function minMaxEqualsFilter(operator, value)
 {
-
 	// Determine string or integer and add quotes
 	let tmpVal = (isNaN(value)) ? "'" + value + "'" : parseInt(value);
-
-	// Init filter variable
 	let filter = false;
 
-	// Determine correct operators for database filter
 	switch (operator)
 	{
-
 		case "min":
 			filter = ">= " + tmpVal;
 			break;
@@ -253,12 +202,9 @@ function minMaxEqualsFilter(operator, value)
 		case "equals":
 			filter = "= " + tmpVal
 			break;
-
 	}
 
-	// Return filter value
 	return filter;
-
 }
 
 
@@ -267,21 +213,15 @@ function minMaxEqualsFilter(operator, value)
  */
 function getDbSort(post)
 {
-
-	// Default value
 	let sortBy = false;
 
-	// Return false if sorting value is "default"
 	if (post.sort === "default")
 	{
 		return sortBy;
 	}
 
-	// Split and reassemble in correct format
 	tmpArr = post.sort.split("_");
 	sortBy = tmpArr[0] + " " + tmpArr[1].toUpperCase();
 
-	// Return sort by string
 	return sortBy;
-
 }

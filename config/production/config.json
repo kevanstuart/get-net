@@ -21,6 +21,7 @@
         "sendTo"     : "kevan.jedi@gmail.com"
     },
     "baseUrl"        : "http://www.getwebkh.com",
+    "imgUrl"         : "http://images.getwebkh.com",
     "plansPath"      : "/api/getplans",
     "filtersPath"    : "/api/getfilters"
 }

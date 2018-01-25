@@ -103,10 +103,8 @@ application.use(session({
  */
 application.get('/robots.txt', function(req, res) 
 {
-
     res.type('text/plain');
     res.send("User-agent: *\nDisallow: /api/");
-
 });
 
 
@@ -115,8 +113,7 @@ application.get('/robots.txt', function(req, res)
  * 1. frontend
  * 2. api
  */
-require('./routes/frontend')(application, config);
-require('./routes/api')(application, config);
+require('./controller/frontend')(application, config);
 
 
 /**

@@ -67,6 +67,18 @@ module.exports =
 			});
 
 		return result;
+	},
+
+	getProviders: function()
+	{
+		let results = db
+			.getProviders()
+			.then(data => 
+			{
+	    		return { providers: data.rows };
+			});
+
+		return results;
 	}
 }
 

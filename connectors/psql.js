@@ -39,6 +39,7 @@ module.exports =
         pool = new pgPool(dbSettings);
     },
 
+
     /**
      * Get the filters
      */
@@ -66,6 +67,34 @@ module.exports =
                 speedsList  : speeds.rows,
                 typesList   : types.rows
             }
+        }
+        catch (error)
+        {
+            console.log(error);
+            return false;
+        }
+        finally
+        {
+            client.release();
+        }
+    },
+
+    /**
+     * Get a list of active providers
+     */
+    getProviders: async function()
+    {
+        var client = await pool.connect();
+        try 
+        {
+            // Create query
+            let query = 
+                "SELECT DISTINCT(provider), provider_logo, provider_link, count(plan_id) AS plans " +
+                "FROM plans WHERE active = true GROUP BY provider, provider_logo, provider_link";
+
+            // Process and return
+            let result = await client.query(query);
+            return result;
         }
         catch (error)
         {

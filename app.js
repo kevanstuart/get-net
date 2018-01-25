@@ -5,18 +5,9 @@
  * Main node file for the WhichISP application
  */
 
-
-/**
- * Get Node Environment Variable
- */
 const environment = process.env.NODE_ENV || "development";
-
-
-/**
- * Set Base Directory && Related
- */
-const dir       = __dirname + '/';
-const configDir = dir + 'config/' + environment + '/';
+const dir         = __dirname + '/';
+const configDir   = dir + 'config/' + environment + '/';
 
 
 /**
@@ -35,40 +26,20 @@ const parser      = require('body-parser');
 const express     = require('express');
 const uuidv4      = require('uuid/v4');
 const ect         = require('ect');
+const session     = require('express-session');
+const memstore    = require('memorystore')(session);
 
-
-/**
- * Session Handling
- */
-const session  = require('express-session');
-const memstore = require('memorystore')(session);
-
-
-/**
- * Configure ECT Rendering Engine
- */
-var renderer = ect({ 
+let renderer = ect({ 
     root: dir + config.settings.views,
     watch: true,
     ext: '.ect'
 });
 
 
-/**
- * Configure Compression Engine
- */
-var compress = compression({ threshold: 0 });
+let compress    = compression({ threshold: 0 });
+let application = express();
 
 
-/**
- * Initialize Express App
- */
-var application = express();
-
-
-/**
- * Configuration for ECT rendering
- */
 application.engine('ect', renderer.render);
 application.set('view engine', 'ect');
 
@@ -77,11 +48,6 @@ application.set('view engine', 'ect');
  * Set caching for static files at 1 week
  */
 application.use(express.static(config.settings.statics, { maxage:'1w' }));
-
-
-/**
- * Set body-parser and compression
- */
 application.use(parser.urlencoded({ extended: true }));
 application.use(parser.json());
 application.use(compress);
@@ -108,36 +74,23 @@ application.get('/robots.txt', function(req, res)
 });
 
 
-/**
- * Require route files
- * 1. frontend
- * 2. api
- */
 require('./controller/frontend')(application, config);
 
 
 /**
- * Default error handler
+ * Looks like the best way to handle errors
  */
 application.use(function(err, req, res, next) 
 {
-
-    // Render error pages
 	res.status(err.status || 500);
 	res.render('error', { error: err });
-
 });
 
 
-/**
- * Start App && Listen to Port
- */
 application.set('port', process.env.PORT || config.settings.port);
-application.listen(application.get('port'), listenResult);
-function listenResult()
+application.listen(application.get('port'), listen);
+function listen()
 {
     console.log('App listening on port ' + application.get('port'));
 }
-
-
 

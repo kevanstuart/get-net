@@ -18,7 +18,7 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 
 /**
- * These are the elements in the contact form
+ * These are the elements in the contact form for validation
  */
 const contactElements = [ 'name', 'email', 'message' ];
 
@@ -28,12 +28,11 @@ const contactElements = [ 'name', 'email', 'message' ];
  */
 module.exports = function(application, config)
 {
-
 	'use strict';
 
 
 	/**
-	 * Initialize connector
+	 * Initialize database connector
 	 */
 	model.constructor(config);
 
@@ -43,6 +42,9 @@ module.exports = function(application, config)
 	 */
 	application.param('page', 
 		checkParameter
+	);
+	application.get('/providers',
+		providersPage
 	);
 	application.get('/contact', 
 		contactPage
@@ -77,6 +79,24 @@ module.exports = function(application, config)
 		}
 
 		next();
+	}
+
+
+	/**
+	 * Show a list of active providers for SEO
+	 */
+	function providersPage(req, res, next)
+	{
+		let providers = model.getProviders();
+		providers.then(data =>
+		{
+			let appData = (Object.keys(data).length > 0) ? data : {};
+
+			appData.base_url = config.baseUrl;
+			appData.img_url  = config.imgUrl;
+
+			res.render('providers', appData);
+		});
 	}
 
 

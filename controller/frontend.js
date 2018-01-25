@@ -5,12 +5,7 @@
  * Handles routing for the frontend urls
  */
 
-/**
- * Module Requires
- * 1. Sendgrid Mail
- * 2. Form Validator
- * 3. Request
- */
+const model     = require('../connectors/model');
 const sendgrid  = require('@sendgrid/mail');
 const validator = require('validator');
 const request   = require('request');
@@ -36,24 +31,32 @@ module.exports = function(application, config)
 
 	'use strict';
 
-	/**
-	 * Set Route URL's && Callbacks
-	 */
-	application.param('page', checkParameter);
 
-	application.get('/contact', contactPage);
+	/**
+	 * Initialize connector
+	 */
+	model.constructor(config);
+
+
+	/**
+	 * Route URL's
+	 */
+	application.param('page', 
+		checkParameter
+	);
+	application.get('/contact', 
+		contactPage
+	);
 	application.post('/contact', 
 		contactPost, 
 		contactMail, 
 		contactPage
 	);
-
 	application.get( '/:page?', 
 		indexFilters, 
 		indexGet,  
 		indexPage
 	);
-	
 	application.post('/:page?', 
 		indexFilters, 
 		indexPost, 
@@ -88,7 +91,6 @@ module.exports = function(application, config)
 		let inputKeys = Object.keys(inputs);
 		inputKeys.map(function(key)
 		{
-
 			inputs[key] = validator.escape(inputs[key]);
 			inputs[key] = validator.trim(inputs[key]);
 
@@ -96,19 +98,16 @@ module.exports = function(application, config)
 			{
 				inputs[key] = validator.normalizeEmail(inputs[key]);
 			}
-
 		});
 
 		inputKeys.map(function(key) 
 		{
-
 			if ((key === "email" && !validator.isEmail(inputs[key])) ||
 				!contactElements.includes(key) || 
 				validator.isEmpty(inputs[key]))
 			{
 				errors.push(key);
 			}
-
 		});
 		
 		res.locals.inputs = inputs;
@@ -153,7 +152,6 @@ module.exports = function(application, config)
 	 */
 	function contactPage(req, res, next)
 	{
-		console.log(res.locals);
 		res.render('contact', res.locals);
 	}
 
@@ -163,38 +161,36 @@ module.exports = function(application, config)
 	 */
 	function indexFilters(req, res, next)
 	{
-		let options = { 
-			url : config.baseUrl + config.filtersPath
-		};
-
-		request(options, function(error, response, data) 
+		let filters = model.getFilters();
+		filters.then(data => 
 		{
-			res.locals.filters = JSON.parse(data);
+			res.locals.filters = data;
+			next();
+		}).catch(error => {
+			console.error(error);
 			next();
 		});
 	}
+
 
 	/**
 	 * Set index route on GET
 	 */
 	function indexGet(req, res, next)
 	{
-		// Reset the session if the page number is unspecified
 		if (req.params.page === undefined)
 		{
 			req.session.filters = false;
 		}
 
-		let pageNum = req.params.page || 1;
-		let filters = req.session.filters || false;
-
 		res.locals.options = {
-			form : { page: pageNum, filters: filters },
-			url  : config.baseUrl + config.plansPath
+			filters: req.session.filters || false,
+			page   : req.params.page || 1
 		};
 
 		next();
 	}
+
 
 	/**
 	 * Set index route on POST
@@ -205,8 +201,8 @@ module.exports = function(application, config)
 		let filters = req.body || false;
 
 		res.locals.options = {
-			form : { page: pageNum, filters: filters },
-			url  : config.baseUrl + config.plansPath
+			filters: filters,
+			page: pageNum
 		};
 
 		next();
@@ -218,18 +214,19 @@ module.exports = function(application, config)
 	 */
 	function indexPage(req, res, next)
 	{
-		request.post(res.locals.options, function(error, response, data) 
+		let plans = model.getPlans(res.locals.options);
+		plans.then(data =>
 		{
-			let appData = (data.length > 0) ? JSON.parse(data) : {};
+			let appData = (Object.keys(data).length > 0) ? data : {};
 			appData.filters  = res.locals.filters;
 			appData.base_url = config.baseUrl;
 			appData.img_url  = config.imgUrl;
-
+			
 			if (appData.post)
 			{
 				req.session.filters = appData.post;
 			}
-
+			
 			res.render('index', appData);
 		});
 	}

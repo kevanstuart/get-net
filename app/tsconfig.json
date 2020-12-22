@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "./app",
+    "rootDir": "./src",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "sourceMap": true
+  },
+  "include": ["src/**/*", "ecosystem.config.js"],
+  "exclude": ["node_modules"]
+}

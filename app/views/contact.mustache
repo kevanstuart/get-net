@@ -1,0 +1,65 @@
+
+{{> layouts/header }}
+
+<div class="container-fluid pt-5 px-5 w-75">
+	<h2 class="heading-ph">Contact GetWeb</h2>
+	<p class="pt-3 m-0">
+		If you've got a question, comment, suggestion or complaint - please let me know and I'll 
+		get back to you as soon as I can. If any of the information on this site is incorrect, I'd
+		really like to know about it.
+	</p>
+
+	{{#sent}}
+	<div class="alert alert-success mt-4 mb-0" role="alert">
+  		Thanks! I'll get back to you as soon as I can.
+	</div>
+	{{/sent}}
+
+	{{#error}}
+	<div class="alert alert-danger mt-4 mb-0" role="alert">
+  		Something went wrong - perhaps you could try again?
+	</div>
+	{{/error}}
+</div>
+
+<form method="POST" id="GetWebContact" name="GetWebContact" 
+	  class="container-fluid pt-4 pb-5 px-5 w-75" novalidate>
+
+	<div class="row">
+		<div class="col">
+			<label for="name">Name</label>
+			<input name="name" type="text" required class="form-control form-control-lg" value="" />
+			<div class="invalid-feedback">Surely you have a name.</div>
+
+			{{! <%= if @errors && @errors.includes("name") then "is-invalid"%> }}
+			{{! <%= if @errors && @errors.includes("name") then @inputs.name %> }}
+
+		</div>
+		<div class="col">
+			<label for="email">Email Address</label>
+			<input name="email" type="email" required class="form-control form-control-lg" value="" />
+			<div class="invalid-feedback">I'd like to respond your email address.</div>
+
+			{{! <%= if @errors && @errors.includes("email") then "is-invalid"%> }}
+			{{! <%= if @errors && @errors.includes("email") then @inputs.email %> }}
+		</div>
+	</div>
+
+	<div class="form-group mt-3">
+		<label for="message">What's up?</label>
+		<textarea rows="3" name="message" required class="form-control form-control-lg" >
+		</textarea>
+		<div class="invalid-feedback">Kinda hard to know what the problem is if this blank.</div>
+	</div>
+
+	<div class="row mt-4">
+		<div class="col">
+			<button class="btn btn-primary" type="submit">Send Message</button>
+		</div>
+	</div>
+</form>
+
+{{! <%= if @errors && @errors.includes("message") then "is-invalid"%> }}
+{{! <%= if @errors && @errors.includes("message") then @inputs.message %> }}
+
+{{> layouts/footer }}

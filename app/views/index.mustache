@@ -1,0 +1,23 @@
+{{> layouts/header }}
+{{> partials/filters }}
+
+<div class="container-fluid px-5 py-4">
+{{#showPlans}}
+{{> partials/data}}
+{{/showPlans}}
+
+{{^plans}}
+	<table class="table table-bordered table-responsive m-0">
+		<tbody>
+			<tr>
+				<td class="align-middle">
+					There seem to be no results for your selection...
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+{{/plans}}
+
+{{> partials/pagination }}
+{{> layouts/footer }}

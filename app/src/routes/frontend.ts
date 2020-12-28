@@ -1,8 +1,9 @@
 import express, { Router } from 'express'
 
 import {
-  getIndex,
-  postIndex,
+  showIndex,
+  getProcess,
+  postProcess,
   checkParam,
   getContact,
   getProviders
@@ -14,7 +15,7 @@ router.get('/providers', getProviders)
 router.get('/contact', getContact)
 
 router.param('id', checkParam)
-router.get('/:id?', getIndex)
-router.post('/:id?', postIndex)
+router.get('/:id?', getProcess, showIndex)
+router.post('/:id?', postProcess, showIndex)
 
 export { router as frontendRoutes }

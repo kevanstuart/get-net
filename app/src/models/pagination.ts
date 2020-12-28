@@ -1,4 +1,9 @@
+interface PageUrl {
+  link: string
+}
+
 export interface Pagination {
-  next?: { link: string }
-  prev?: { link: string }
+  current?: PageUrl
+  next?: PageUrl
+  prev?: PageUrl
 }

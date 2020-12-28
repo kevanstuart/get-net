@@ -1,18 +1,10 @@
+import { FilterOptions } from '../models/filters'
 import { pgp } from '../utils/database'
-
-interface FilterObject {
-  download_speed?: number
-  provider_uuid?: string
-  connection?: string
-  is_deleted: boolean
-  price?: number
-  id?: number
-}
 
 export class FilterSet {
   rawType = true
 
-  constructor(private filters: FilterObject) {
+  constructor(private filters: FilterOptions) {
     if (!filters || typeof filters !== 'object') {
       throw new TypeError('Parameter \'filters\' must be an object.')
     }
@@ -22,19 +14,27 @@ export class FilterSet {
 
   toPostgres(): string {
     const keys = Object.keys(this.filters)
-    const strings = keys.map((k: string) => {
-      let filter = 'pc.' + pgp.as.name(k)
 
-      if (k === 'download_speed') {
-        filter += ' >= ${' + k + '}'
-      } else if (k === 'price') {
-        filter += ' <= ${' + k + '}'
-      } else {
-        filter += ' = ${' + k + '}'
-      }
+    const strings = keys
+      .filter((k: string) =>
+        this.filters[k] !== '0' &&
+        this.filters[k] !== undefined &&
+        !(k === 'price' && this.filters[k] === 0)
+      )
+      .map((k: string) => {
+        let queryFilter = 'pc.' + pgp.as.name(k)
 
-      return filter
-    }).join(' AND ')
+        if (k === 'download_speed' || k === 'id') {
+          queryFilter += ' >= ${' + k + '}'
+        } else if (k === 'price') {
+          queryFilter += ' <= ${' + k + '}'
+        } else {
+          queryFilter += ' = ${' + k + '}'
+        }
+
+        return queryFilter
+      })
+      .join(' AND ')
 
     return pgp.as.format(strings, this.filters)
   }

@@ -17,7 +17,7 @@ import path from 'path'
 
 declare module "express-session" {
   interface Session {
-    pageIds: number[]
+    pageList: number[]
     filters: FilterParams
   }
 }
@@ -51,8 +51,8 @@ application
   .use(express.static('public', { maxAge:'1w' }))
   .use(parser.urlencoded({ extended: true }))
   .use(compression({ threshold: 0 }))
-  .use(parser.json())
   .use(session(storeOptions))
+  .use(parser.json())
   .use(csrf)
   .use(useCsrf)
 

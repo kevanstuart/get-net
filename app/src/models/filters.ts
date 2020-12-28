@@ -6,18 +6,21 @@ interface DropdownFilter {
   isSelected?: boolean
 }
 
-export interface Filters {
-  // sort: DropdownFilter[]
+interface Price {
+  max: number
+  from: number
+}
+
+interface Speed {
+  values: number[]
+  from: number
+}
+
+export interface FilterOutputs {
   type: DropdownFilter[]
   provider: Provider[]
-  price: {
-    max: number
-    from: number
-  }
-  speed: {
-    values: number[]
-    from: number
-  }
+  price: Price
+  speed: Speed
 }
 
 export interface FilterOptions {

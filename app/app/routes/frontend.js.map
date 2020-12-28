@@ -1,0 +1,1 @@
+{"version":3,"file":"frontend.js","sourceRoot":"","sources":["../../src/routes/frontend.ts"],"names":[],"mappings":";;;;;;AAAA,sDAAyC;AAEzC,sDAIgC;AAEhC,MAAM,MAAM,GAAW,iBAAO,CAAC,MAAM,EAAE,CAAA;AAcpB,gCAAc;AAZjC,MAAM,CAAC,GAAG,CAAC,SAAS,EAAE,mBAAQ,CAAC,CAAA;AAC/B,MAAM,CAAC,GAAG,CAAC,UAAU,EAAE,qBAAU,CAAC,CAAA;AAClC,MAAM,CAAC,GAAG,CAAC,YAAY,EAAE,uBAAY,CAAC,CAAA"}

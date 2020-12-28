@@ -1,0 +1,90 @@
+<form action="<%= @base %>" method="POST" name="comparison" class="container-fluid px-5 py-4">
+    <div class="row">
+
+        <!-- Providers Filter -->
+        <% if @filters.providers?.length > 0 : %>
+        <div class="col">
+            <label for="provider">Provider</label>
+            <select class="form-control custom-select" name="provider">
+                <% for provider in @filters.providers : %>
+                <option value="<%= provider %>" 
+                    <% if @post && @post.provider == provider : %>selected<% end %> >
+                    <%= provider %>
+                </option>
+                <% end %>
+            </select>
+        </div>
+        <% end %>
+
+        <!-- Connection Types Filter -->
+        <% if @filters.types?.length > 0 : %>
+        <div class="col">
+            <label for="connection_type">Connection Type</label>
+            <select class="form-control custom-select" name="connection_type">
+                <% for type in @filters.types : %>
+                <option value="<%= type %>" 
+                    <% if @post && @post.connection_type == type : %>selected<% end %>>
+                    <%= type %>
+                </option>
+                <% end %>
+            </select>
+        </div>
+        <% end %>
+
+        <!-- Sorting Dropdown -->
+        <% if @filters.sort : %>
+        <div class="col">
+            <label for="sort">Sort By</label>
+            <select class="form-control custom-select" name="sort">
+                <% for key in Object.keys(@filters.sort) : %>
+                <option value="<%= key %>" 
+                    <% if @post && @post.sort == key : %>selected<% end %>>
+                    <%= @filters.sort[key] %>
+                </option>
+                <% end %>
+            </select>
+        </div>
+        <% end %>
+
+    </div>
+
+    <div class="row mt-3">
+
+        <!-- Max Price Filter -->
+        <% if @filters.prices?.length > 0 : %>
+        <div class="col">
+            <label for="max_price">Max Price</label>
+            <input name="max_price" id="max_price" 
+                data-min="<%= @filters.prices[0] %>" 
+                data-max="<%= @filters.prices[1] %>"
+
+                <% if (@post && (@post.max_price != @filters.prices[1])) : %>
+                data-from="<%= @post.max_price %>"
+                <% else : %> 
+                data-from="<%= @filters.prices[1] %>"
+                <% end %> />
+        </div>
+        <% end %>
+
+        <!-- Min Speed Filter -->
+        <% if @filters.speeds?.length > 0 : %>
+        <div class="col">
+            <label for="min_speed">Minimum Speed</label>
+            <input name="min_speed" id="min_speed"
+                data-values="<%= @filters.speeds %>"
+                <% if (@post && (@post.min_speed != @filters.speeds[0])) : %>
+                data-from="<%= @filters.speeds.indexOf(parseInt(@post.min_speed)) %>"
+                <% else : %>
+                data-from="0"
+                <% end %>
+            />
+        </div>
+        <% end %>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <button class="btn btn-primary" type="submit">Show Results</button>
+        </div>
+    </div>
+</form>

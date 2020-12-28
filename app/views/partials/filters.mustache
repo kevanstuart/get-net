@@ -1,0 +1,49 @@
+{{#filters}}
+<form action="" method="POST" name="comparison" class="container-fluid px-5 py-4">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}"> 
+  <div class="row">
+    <div class="col">
+      <label for="provider">Provider</label>
+      <select class="form-control custom-select" name="provider">
+        <option value="0">View All</option>
+        {{#provider}}
+        <option value="{{uuid}}" {{#isSelected}}selected{{/isSelected}}>
+          {{name}}
+        </option>
+        {{/provider}}
+      </select>
+    </div>
+    <div class="col">
+      <label for="connection_type">Connection Type</label>
+      <select class="form-control custom-select" name="connection_type">
+        <option value="0">View All</option>
+        {{#type}}
+        <option value="{{id}}" {{#isSelected}}selected{{/isSelected}}>
+          {{name}}
+        </option>
+        {{/type}}
+      </select>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <label for="max_price">Max Price</label>
+      <input name="max_price" id="max_price" 
+        data-min="0" 
+        data-max="{{price.max}}"
+        data-from="{{price.from}}" />
+    </div>
+    <div class="col">
+      <label for="min_speed">Minimum Speed</label>
+      <input name="min_speed" id="min_speed"
+          data-values="{{speed.values}}"
+          data-from="{{speed.from}}" />
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col">
+      <button class="btn btn-primary" type="submit">Show Results</button>
+    </div>
+  </div>
+</form>
+{{/filters}}

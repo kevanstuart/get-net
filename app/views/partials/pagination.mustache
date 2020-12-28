@@ -1,0 +1,14 @@
+<div class="container-fluid px-5 pb-5">
+	{{#pagination}}
+	<nav class="mt-4" aria-label="Pagination">
+		<ul class="pagination">
+			{{#prev}}
+			<li class="page-item"><a class="page-link" href="{{link}}">Previous</a></li>
+			{{/prev}}
+			{{#next}}
+			<li class="page-item"><a class="page-link" href="{{link}}">Next</a></li>
+			{{/next}}
+		</ul>
+	</nav>
+	{{/pagination}}
+</div>

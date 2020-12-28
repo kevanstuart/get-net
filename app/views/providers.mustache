@@ -1,0 +1,34 @@
+{{> layouts/header }}
+
+<div class="container-fluid p-5">
+	<h2 class="heading-ph">Internet Providers in Cambodia</h2>
+
+	{{#providers}}
+	<div class="row pt-5">
+		<div class="col-4 pb-5">
+			<div class="card p-3">
+				{{! <img class="card-img-top" alt="" src="" /> }}
+				<h4 class="card-title">{{name}}</h4>
+		        <p class="card-text">Number of packages: 0</p>
+		        <p class="card-text">
+		        	<a href="{{link}}" role="button">
+		        		View website &raquo;
+		        	</a>
+		       	</p>
+	       </div>
+		</div>
+	</div>
+	{{/providers}}
+	
+	{{^providers}}
+	<table class="table table-bordered table-responsive m-0">
+		<tbody>
+			<tr>
+				<td class="align-middle">There seem to be no results for your selection...</td>
+			</tr>
+		</tbody>
+	</table>
+	{{/providers}}
+</div>
+
+{{> layouts/footer }}

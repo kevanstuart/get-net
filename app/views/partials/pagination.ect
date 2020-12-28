@@ -1,0 +1,15 @@
+<div class="container-fluid px-5 pb-5">
+
+<% if @page || @next: %>
+	<nav class="mt-4" aria-label="Pagination">
+		<ul class="pagination">
+			<% if @page > 1 : %>
+			<li class="page-item"><a class="page-link" href="<%= parseInt(@page) - 1 %>">Previous</a></li>
+			<% end %>
+			<% if (@next) : %>
+			<li class="page-item"><a class="page-link" href="<%= parseInt(@page) + 1  %>">Next</a></li>
+			<% end %>
+		</ul>
+	</nav>
+<% end %>
+</div>
